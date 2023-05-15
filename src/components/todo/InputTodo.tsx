@@ -1,5 +1,5 @@
 import { CiSearch } from "react-icons/ci";
-import { FaSpinner } from "react-icons/fa";
+import { FaSpinner, FaPlusCircle } from "react-icons/fa";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 
 import { ITodo } from "../../types/common";
@@ -64,7 +64,13 @@ const InputTodo = ({ setTodos, setInputText, inputText }: Props) => {
         onChange={(e) => setInputText(e.target.value)}
         disabled={isLoading}
       />
-      {isLoading && <S.SpinnerIcon />}
+      {!isLoading ? (
+        <button className="input-submit" type="submit">
+          <FaPlusCircle className="btn-plus" />
+        </button>
+      ) : (
+        <FaSpinner className="spinner" />
+      )}
     </S.FormWrap>
   );
 };

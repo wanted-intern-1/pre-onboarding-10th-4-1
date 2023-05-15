@@ -20,8 +20,8 @@ const Main = () => {
   }, []);
 
   return (
-    <div className="container">
-      <div className="inner">
+    <S.Container>
+      <S.Wrap>
         <Header />
         <S.DropDownContainer>
           <InputTodo
@@ -34,12 +34,24 @@ const Main = () => {
           )}
         </S.DropDownContainer>
         <TodoList todos={todoListData} setTodos={setTodoListData} />
-      </div>
-    </div>
+      </S.Wrap>
+    </S.Container>
   );
 };
 
 const S = {
+  Container: styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+  `,
+  Wrap: styled.div`
+    width: 100%;
+    padding: 8rem 10px 4rem;
+  `,
   DropDownContainer: styled.div`
     position: relative;
   `,
