@@ -13,8 +13,7 @@
 
 `Toodos` 앱의 폴더 구조입니다.
 
-> **Warning**
-> _**별도로 전달 받으신 api token을 `.env` 파일에 추가 부탁드립니다.**_
+> **Warning** > _**별도로 전달 받으신 api token을 `.env` 파일에 추가 부탁드립니다.**_
 
 ```javascript
 src
