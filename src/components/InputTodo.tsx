@@ -1,59 +1,54 @@
 import { FaPlusCircle, FaSpinner } from "react-icons/fa";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { ITodo } from "../types/common";
 import { createTodo } from "../api/todo";
 import useFocus from "../hooks/useFocus";
+import useForm from "../hooks/useForm";
 
 type Props = {
   setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
 };
 
 const InputTodo = ({ setTodos }: Props) => {
-  const [inputText, setInputText] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const { ref, setFocus } = useFocus();
 
   useEffect(() => {
     setFocus();
   }, [setFocus]);
 
-  const handleSubmit = useCallback(
-    async (e: FormEvent) => {
-      try {
-        e.preventDefault();
-        setIsLoading(true);
-
-        const trimmed = inputText.trim();
-        if (!trimmed) {
-          return alert("Please write something");
-        }
-
-        const newItem: Omit<ITodo, "id"> = { title: trimmed };
-        const { data } = await createTodo(newItem);
-
-        if (data) {
-          return setTodos((prev) => [...prev, data as ITodo]);
-        }
-      } catch (error) {
-        console.error(error);
-        alert("Something went wrong.");
-      } finally {
-        setInputText("");
-        setIsLoading(false);
-      }
+  const { values, isLoading, handleChange, handleSubmit } = useForm({
+    initialValue: {
+      search: "",
     },
-    [inputText, setTodos]
-  );
+    onSubmit: async ({ search }: { search: string }) => {
+      const newItem: Omit<ITodo, "id"> = { title: search.trim() };
+      const { data } = await createTodo(newItem);
+
+      if (data) setTodos((prev) => [...prev, data as ITodo]);
+    },
+    validate: ({ search }: { search: string }) => {
+      const error: any = {};
+
+      const trimmed = search.trim();
+      if (!trimmed) {
+        alert("Please write something");
+        error.search = "Error: input empty";
+      }
+
+      return error;
+    },
+  });
 
   return (
     <form className="form-container" onSubmit={handleSubmit}>
       <input
         className="input-text"
         placeholder="Add new todo..."
+        name="search"
         ref={ref}
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
+        value={values.search}
+        onChange={handleChange}
         disabled={isLoading}
       />
       {!isLoading ? (
