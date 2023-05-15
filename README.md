@@ -170,7 +170,7 @@ yarn
 3. Run application
 
 ```bash
-npm run start
+npm run start --force
 # OR
 yarn start
 ```
