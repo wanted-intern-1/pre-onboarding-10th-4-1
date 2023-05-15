@@ -11,8 +11,15 @@ const Main = () => {
 
   useEffect(() => {
     (async () => {
-      const { data } = await getTodoList();
-      setTodoListData(data || []);
+      try {
+        const { data } = await getTodoList();
+        setTodoListData(data);
+      } catch (e) {
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        console.error(errorMessage);
+
+        setTodoListData([]);
+      }
     })();
   }, []);
 
