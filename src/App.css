@@ -31,21 +31,32 @@ body {
 
 .form-container {
   width: 100%;
+  border: solid 1px #dedede;
   margin-bottom: 20px;
+  height: 70px;
   display: flex;
-  border-radius: calc(0.5 * 100px);
-  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.38);
-  justify-content: space-evenly;
+  padding: 19px 20px;
+  border-radius: calc(0.06 * 100px);
+  align-items: center;
+}
+
+.form-container:hover {
+  outline-width: 4.78;
+  outline-style: solid;
+  outline-color: #dedede;
 }
 
 .input-text {
-  font-size: 1rem;
+  font-size: 1.4rem;
   font-weight: 400;
   width: 85%;
-  padding-right: 5px;
   padding-left: 10px;
   border-radius: calc(0.5 * 100px);
   background-color: transparent;
+}
+
+.input-text::placeholder {
+  color: #9f9f9f;
 }
 
 .input-submit {
@@ -53,17 +64,23 @@ body {
   cursor: pointer;
   display: flex;
   align-items: center;
+  margin: 0px 10px;
 }
 
 .input-text,
 .input-submit {
-  height: 45px;
+  height: 31px;
   outline: none;
   border: none;
 }
 
 .btn-plus {
   color: darkcyan;
+  font-size: 45px;
+}
+
+.btn-search {
+  color: #7d7d7d;
   font-size: 20px;
 }
 
