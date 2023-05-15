@@ -1,4 +1,3 @@
-import { FaPlusCircle, FaSpinner, FaSearch } from "react-icons/fa";
 import { SearchIcon } from "../asset/SearchIcon";
 import { LoadingIcon } from "../asset/LoadingIcon";
 import { FormEvent, useCallback, useEffect, useState } from "react";
@@ -11,9 +10,15 @@ type Props = {
   setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
 };
 
+const containerStyle: React.CSSProperties = {
+  borderColor: "#9F9F9F",
+  outline: "none",
+};
+
 const InputTodo = ({ setTodos }: Props) => {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [onFocused, setOnFocused] = useState(false);
   const { ref, setFocus } = useFocus();
 
   useEffect(() => {
@@ -49,7 +54,12 @@ const InputTodo = ({ setTodos }: Props) => {
   );
 
   return (
-    <form className="form-container" onSubmit={handleSubmit}>
+    <form
+      className="form-container"
+      onSubmit={handleSubmit}
+      style={onFocused ? containerStyle : {}}
+      onMouseOut={() => setOnFocused(false)}
+    >
       <button className="input-submit" type="submit">
         <SearchIcon />
       </button>
@@ -58,12 +68,19 @@ const InputTodo = ({ setTodos }: Props) => {
         placeholder="Add new todo..."
         ref={ref}
         value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
+        onChange={(e) => {
+          setInputText(e.target.value);
+          setOnFocused(true);
+        }}
         disabled={isLoading}
+        onClick={() => setOnFocused(true)}
+        onFocus={() => setOnFocused(true)}
       />
-      <span className="spinner">
-        <LoadingIcon />
-      </span>
+      {isLoading && (
+        <span className="spinner">
+          <LoadingIcon />
+        </span>
+      )}
     </form>
   );
 };

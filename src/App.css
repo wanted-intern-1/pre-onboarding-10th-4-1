@@ -31,7 +31,7 @@ body {
 
 .form-container {
   width: 100%;
-  border: solid 1px #dedede;
+  border: solid 0.1rem #dedede;
   margin-bottom: 20px;
   height: 70px;
   display: flex;
@@ -51,8 +51,10 @@ body {
   font-weight: 400;
   width: 85%;
   padding-left: 10px;
-  border-radius: calc(0.5 * 100px);
   background-color: transparent;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .input-text::placeholder {
