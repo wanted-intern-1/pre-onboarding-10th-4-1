@@ -41,7 +41,7 @@ body {
 }
 
 .form-container:hover {
-  outline-width: 4.78;
+  outline-width: 4.78px;
   outline-style: solid;
   outline-color: #dedede;
 }

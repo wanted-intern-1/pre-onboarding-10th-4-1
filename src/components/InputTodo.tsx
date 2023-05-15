@@ -1,5 +1,6 @@
 import { FaPlusCircle, FaSpinner, FaSearch } from "react-icons/fa";
 import { SearchIcon } from "../asset/SearchIcon";
+import { LoadingIcon } from "../asset/LoadingIcon";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 
 import { ITodo } from "../types/common";
@@ -60,6 +61,9 @@ const InputTodo = ({ setTodos }: Props) => {
         onChange={(e) => setInputText(e.target.value)}
         disabled={isLoading}
       />
+      <span className="spinner">
+        <LoadingIcon />
+      </span>
     </form>
   );
 };
