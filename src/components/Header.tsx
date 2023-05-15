@@ -1,4 +1,7 @@
-const Header = () => {
+type Props = {
+  title: string;
+};
+const Header = ({ title }: Props) => {
   const headerStyle: React.CSSProperties = {
     padding: "20px 0",
     lineHeight: "1.5em",
@@ -14,7 +17,7 @@ const Header = () => {
 
   return (
     <header style={headerStyle}>
-      <h1 style={titleStyle}>Toodos</h1>
+      <h1 style={titleStyle}>{title}</h1>
     </header>
   );
 };

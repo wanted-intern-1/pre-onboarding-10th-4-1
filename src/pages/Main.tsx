@@ -19,7 +19,7 @@ const Main = () => {
   return (
     <div className="container">
       <div className="inner">
-        <Header />
+        <Header title="Toodos" />
         <InputTodo setTodos={setTodoListData} />
         <TodoList todos={todoListData} setTodos={setTodoListData} />
       </div>
