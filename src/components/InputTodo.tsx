@@ -1,10 +1,15 @@
 import { FaPlusCircle, FaSpinner } from "react-icons/fa";
-import { useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 
+import { ITodo } from "../types/common";
 import { createTodo } from "../api/todo";
 import useFocus from "../hooks/useFocus";
 
-const InputTodo = ({ setTodos }) => {
+type Props = {
+  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
+};
+
+const InputTodo = ({ setTodos }: Props) => {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { ref, setFocus } = useFocus();
@@ -14,7 +19,7 @@ const InputTodo = ({ setTodos }) => {
   }, [setFocus]);
 
   const handleSubmit = useCallback(
-    async (e) => {
+    async (e: FormEvent) => {
       try {
         e.preventDefault();
         setIsLoading(true);
@@ -24,11 +29,11 @@ const InputTodo = ({ setTodos }) => {
           return alert("Please write something");
         }
 
-        const newItem = { title: trimmed };
+        const newItem: Omit<ITodo, "id"> = { title: trimmed };
         const { data } = await createTodo(newItem);
 
         if (data) {
-          return setTodos((prev) => [...prev, data]);
+          return setTodos((prev) => [...prev, data as ITodo]);
         }
       } catch (error) {
         console.error(error);
@@ -38,7 +43,7 @@ const InputTodo = ({ setTodos }) => {
         setIsLoading(false);
       }
     },
-    [inputText, setTodos],
+    [inputText, setTodos]
   );
 
   return (

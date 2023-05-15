@@ -14,7 +14,10 @@
     "react-scripts": "^5.0.0"
   },
   "scripts": {
-    "start": "react-scripts start"
+    "start": "react-scripts start",
+    "postinstall": "husky install && git config --global commit.template",
+    "format": "prettier --cache --write . && git add .",
+    "lint": "eslint --cache ."
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -30,5 +33,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.1",
+    "@types/node": "^20.1.4",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "husky": "^8.0.3",
+    "prettier": "^2.8.8",
+    "typescript": "^5.0.4"
   }
 }
