@@ -1,4 +1,3 @@
-import Highlighter from "react-highlight-words";
 import { styled } from "styled-components";
 import { theme } from "../../styles/theme";
 
@@ -9,18 +8,24 @@ type Props = {
 };
 
 const SearchItem = ({ search, inputText, onClick }: Props) => {
+  const highlight = (text: string, inputText: string) => {
+    const parts = text.split(new RegExp(`(${inputText})`, "gi"));
+    return (
+      <span>
+        {parts.map((part) =>
+          part.toLowerCase() === inputText.toLowerCase() ? (
+            <S.Highlight>{part}</S.Highlight>
+          ) : (
+            part
+          )
+        )}
+      </span>
+    );
+  };
+
   return (
     <S.TodoLine onClick={() => onClick(search)}>
-      <Highlighter
-        highlightStyle={{
-          color: theme.colors.green500,
-          backgroundColor: "transparent",
-        }}
-        searchWords={[inputText]}
-        textToHighlight={search}
-      >
-        {search}
-      </Highlighter>
+      {highlight(search, inputText)}
     </S.TodoLine>
   );
 };
@@ -33,17 +38,15 @@ const S = {
       background-color: ${({ theme }) => theme.colors.neutral100};
       border-radius: 3px;
     }
+    &:active {
+      background-color: ${({ theme }) => theme.colors.green100};
+    }
     display: flex;
     align-items: center;
     justify-content: space-between;
   `,
-  HoverNotice: styled.div`
-    color: #3211ff;
-    font-size: 8px;
-  `,
-  ClickNotice: styled.div`
-    color: #ff112e;
-    font-size: 8px;
+  Highlight: styled.span`
+    color: ${theme.colors.green500};
   `,
 };
 
