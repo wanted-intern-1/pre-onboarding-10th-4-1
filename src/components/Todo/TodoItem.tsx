@@ -1,8 +1,9 @@
+import { useCallback } from "react";
 import { FaSpinner, FaTrash } from "react-icons/fa";
-import { useCallback, useState } from "react";
 
-import { ITodo } from "../../types/common";
 import { TodoAPI } from "../../api";
+import { useMutation } from "../../hooks";
+import { ITodo } from "../../types/common";
 
 type Props = {
   id: string;
@@ -11,21 +12,19 @@ type Props = {
 };
 
 const TodoItem = ({ id, title, setTodos }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleRemoveTodo = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      await TodoAPI.remove(id);
-
+  const [removeTodo, { isLoading }] = useMutation(TodoAPI.remove, {
+    onSuccess: () => {
       setTodos((prev) => prev.filter((item) => item.id !== id));
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error(error);
       alert("Something went wrong.");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [id, setTodos]);
+    },
+  });
+
+  const handleRemoveTodo = useCallback(() => {
+    removeTodo(id);
+  }, [id, removeTodo]);
 
   return (
     <li className="item">

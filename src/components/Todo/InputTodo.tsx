@@ -2,7 +2,7 @@ import { FaPlusCircle, FaSpinner } from "react-icons/fa";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 
 import { TodoAPI } from "../../api";
-import { useFocus } from "../../hooks";
+import { useFocus, useMutation } from "../../hooks";
 import { ITodo } from "../../types/common";
 
 type Props = {
@@ -11,39 +11,34 @@ type Props = {
 
 const InputTodo = ({ setTodos }: Props) => {
   const [inputText, setInputText] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const { ref, setFocus } = useFocus();
 
   useEffect(() => {
     setFocus();
   }, [setFocus]);
 
-  const handleSubmit = useCallback(
-    async (e: FormEvent) => {
-      try {
-        e.preventDefault();
-        setIsLoading(true);
-
-        const trimmed = inputText.trim();
-        if (!trimmed) {
-          return alert("Please write something");
-        }
-
-        const newItem: Omit<ITodo, "id"> = { title: trimmed };
-        const { data } = await TodoAPI.create(newItem);
-
-        if (data) {
-          return setTodos((prev) => [...prev, data as ITodo]);
-        }
-      } catch (error) {
-        console.error(error);
-        alert("Something went wrong.");
-      } finally {
-        setInputText("");
-        setIsLoading(false);
-      }
+  const [createTodo, { isLoading }] = useMutation(TodoAPI.create, {
+    onSuccess: (data: ITodo) => {
+      setTodos((prev) => [...prev, data]);
+      setInputText("");
     },
-    [inputText, setTodos]
+    onError: (error) => {
+      console.error(error);
+      alert("Something went wrong.");
+    },
+  });
+
+  const handleSubmit = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
+      const trimmed = inputText.trim();
+      if (!trimmed) {
+        return alert("Please write something");
+      }
+      const newItem: Omit<ITodo, "id"> = { title: trimmed };
+      createTodo(newItem);
+    },
+    [inputText, createTodo]
   );
 
   return (

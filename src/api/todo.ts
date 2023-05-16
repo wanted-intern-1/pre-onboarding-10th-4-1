@@ -13,16 +13,15 @@ const get = async () => {
   }
 };
 
-const create = async (data: Omit<ITodo, "id">) => {
+const create = async (data: Omit<ITodo, "id">): Promise<ITodo> => {
   try {
     const response = await apiRequest.post(`${RESOURCE}`, data);
 
-    return response;
+    return response.data as ITodo;
   } catch (error) {
     throw new Error("API create error");
   }
 };
-
 const remove = async (id: string) => {
   try {
     const response = await apiRequest.delete(`${RESOURCE}/${id}`);
