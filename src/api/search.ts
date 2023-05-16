@@ -18,6 +18,6 @@ export const getSearch = async ({
 
     return response;
   } catch (error) {
-    throw new Error('API getTodoList error');
+    throw new Error('API getSearchList error');
   }
 };

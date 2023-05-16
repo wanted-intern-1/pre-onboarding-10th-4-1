@@ -1,18 +1,69 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import SearchItem from './SearchItem';
+import useInfiniteScroll from '../../hooks/useInfiniteScroll';
+import { getSearch } from '../../api/search';
+import { useInputContext } from '../../contexts/InputProvider';
+import { useDebounce } from '../../hooks/useDebounce';
+import { FaEllipsisH, FaSpinner } from 'react-icons/fa';
 
-const SearchList = ({ searchList = [] }) => {
+const DEFAULT_SEARCH_PARAMS = {
+  PAGE_NUM: 1,
+  LIMIT: 10,
+};
+
+const SearchList = () => {
+  const { inputText } = useInputContext();
+  const [searchList, setSearchList] = useState([]);
+  const debouncedValue = useDebounce(inputText);
+
+  const fetchData = useCallback(
+    async (pageParam = 1) => {
+      return await getSearch({
+        q: debouncedValue,
+        page: pageParam,
+        limit: DEFAULT_SEARCH_PARAMS.LIMIT,
+      });
+    },
+    [debouncedValue]
+  );
+
+  useEffect(() => {
+    const getSearchList = async () => {
+      const { data } = await fetchData();
+
+      setSearchList(data.result);
+    };
+
+    debouncedValue !== '' ? getSearchList() : setSearchList([]);
+  }, [debouncedValue, fetchData]);
+
+  const { setTarget, isLoading, isLastPage, state } = useInfiniteScroll({
+    fn: fetchData,
+    initData: searchList as any,
+  });
+
   return (
-    <S.Container>
-      {searchList && (
-        <ul>
-          {searchList.map((listItem, i) => {
-            return <SearchItem key={i} id={i} listItem={listItem} />;
-          })}
-        </ul>
+    <>
+      {state.length ? (
+        <S.Container>
+          <S.UnorderedList>
+            {state.map((listItem, i) => {
+              return <SearchItem key={i} id={i} listItem={listItem} />;
+            })}
+            {!isLastPage ? (
+              <li ref={setTarget}>{isLoading && <FaSpinner className="spinner" />}</li>
+            ) : (
+              <li>
+                <FaEllipsisH />
+              </li>
+            )}
+          </S.UnorderedList>
+        </S.Container>
+      ) : (
+        <></>
       )}
-    </S.Container>
+    </>
   );
 };
 
@@ -40,6 +91,15 @@ const S = {
       height: 30%;
       background-color: ${({ theme }) => theme.colors.neutral600};
       border-radius: 20px;
+    }
+  `,
+  UnorderedList: styled.ul`
+    li {
+      &:last-of-type {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     }
   `,
 };

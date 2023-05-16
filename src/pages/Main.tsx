@@ -13,6 +13,11 @@ import useAsync from '../hooks/useAsync';
 import { getSearch } from '../api/search';
 import { useDebounce } from '../hooks/useDebounce';
 
+const DEFAULT_SEARCH_PARAMS = {
+  PAGE_NUM: 1,
+  LIMIT: 10,
+};
+
 const Main = () => {
   const [searchList, setSearchList] = useState([]);
   const { inputText } = useInputContext();
@@ -20,18 +25,6 @@ const Main = () => {
     fn: getTodoList,
     deps: [],
   });
-
-  const debouncedValue = useDebounce(inputText);
-
-  useEffect(() => {
-    const getSearchList = async () => {
-      const { data } = await getSearch({ q: debouncedValue, page: 1, limit: 10 });
-
-      setSearchList(data.result);
-    };
-
-    debouncedValue.length ? getSearchList() : setSearchList([]);
-  }, [debouncedValue]);
 
   useEffect(() => {
     callback();
@@ -45,6 +38,22 @@ const Main = () => {
     return await deleteTodo(id);
   }, []);
 
+  const debouncedValue = useDebounce(inputText);
+
+  useEffect(() => {
+    const getSearchList = async () => {
+      const { data } = await getSearch({
+        q: debouncedValue,
+        page: DEFAULT_SEARCH_PARAMS.PAGE_NUM,
+        limit: DEFAULT_SEARCH_PARAMS.LIMIT,
+      });
+
+      setSearchList(data.result);
+    };
+
+    debouncedValue.length ? getSearchList() : setSearchList([]);
+  }, [debouncedValue]);
+
   return (
     <S.Container>
       <S.Wrap>
@@ -56,7 +65,7 @@ const Main = () => {
         >
           <S.DropDownContainer>
             <InputTodo />
-            {searchList.length > 0 && <SearchList searchList={searchList} />}
+            <SearchList />
           </S.DropDownContainer>
           <TodoList />
         </TodoListProvider>
