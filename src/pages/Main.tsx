@@ -11,6 +11,7 @@ import { useInputContext } from '../contexts/InputProvider';
 import TodoListProvider from '../contexts/TodoListProvider';
 import useAsync from '../hooks/useAsync';
 import { getSearch } from '../api/search';
+import { useDebounce } from '../hooks/useDebounce';
 
 const Main = () => {
   const [searchList, setSearchList] = useState([]);
@@ -20,15 +21,17 @@ const Main = () => {
     deps: [],
   });
 
+  const debouncedValue = useDebounce(inputText);
+
   useEffect(() => {
     const getSearchList = async () => {
-      const { data } = await getSearch({ q: inputText, page: 1, limit: 10 });
+      const { data } = await getSearch({ q: debouncedValue, page: 1, limit: 10 });
 
       setSearchList(data.result);
     };
 
-    inputText.length ? getSearchList() : setSearchList([]);
-  }, [inputText]);
+    debouncedValue.length ? getSearchList() : setSearchList([]);
+  }, [debouncedValue]);
 
   useEffect(() => {
     callback();
