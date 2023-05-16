@@ -1,9 +1,9 @@
 import { FaPlusCircle, FaSpinner } from "react-icons/fa";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 
-import { ITodo } from "../types/common";
-import { createTodo } from "../api/todo";
-import useFocus from "../hooks/useFocus";
+import { TodoAPI } from "../../api";
+import { useFocus } from "../../hooks";
+import { ITodo } from "../../types/common";
 
 type Props = {
   setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
@@ -30,7 +30,7 @@ const InputTodo = ({ setTodos }: Props) => {
         }
 
         const newItem: Omit<ITodo, "id"> = { title: trimmed };
-        const { data } = await createTodo(newItem);
+        const { data } = await TodoAPI.create(newItem);
 
         if (data) {
           return setTodos((prev) => [...prev, data as ITodo]);

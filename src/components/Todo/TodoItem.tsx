@@ -1,8 +1,8 @@
 import { FaSpinner, FaTrash } from "react-icons/fa";
 import { useCallback, useState } from "react";
 
-import { ITodo } from "../types/common";
-import { deleteTodo } from "../api/todo";
+import { ITodo } from "../../types/common";
+import { TodoAPI } from "../../api";
 
 type Props = {
   id: string;
@@ -16,7 +16,7 @@ const TodoItem = ({ id, title, setTodos }: Props) => {
   const handleRemoveTodo = useCallback(async () => {
     try {
       setIsLoading(true);
-      await deleteTodo(id);
+      await TodoAPI.remove(id);
 
       setTodos((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
