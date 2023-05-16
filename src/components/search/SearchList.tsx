@@ -2,6 +2,7 @@ import React from "react";
 import { styled } from "styled-components";
 import SearchItem from "./SearchItem";
 import { ITodo } from "../../types/common";
+import useDebounce from "../../hooks/useDebounce";
 
 type Props = {
   todos: ITodo[];
@@ -9,6 +10,8 @@ type Props = {
 };
 
 const SearchList = ({ todos, inputText }: Props) => {
+  const debouncedInputText = useDebounce(inputText);
+
   const filterKeywordTodos = todos.filter((todo) =>
     todo.title.includes(inputText)
   );
