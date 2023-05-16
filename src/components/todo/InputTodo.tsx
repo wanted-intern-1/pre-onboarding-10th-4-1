@@ -1,13 +1,12 @@
-import { CiSearch } from "react-icons/ci";
-import { FaSpinner, FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaSpinner } from "react-icons/fa";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 
 import { ITodo } from "../../types/common";
-import { createTodo } from "../../api/todo";
-import useFocus from "../../hooks/useFocus";
-import styled from "styled-components";
 import SearchSvg from "../../assets/SearchSvg";
 import SpinnberSvg from "../../assets/SpinnerSvg";
+import { createTodo } from "../../api/todo";
+import styled from "styled-components";
+import useFocus from "../../hooks/useFocus";
 
 type Props = {
   setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
