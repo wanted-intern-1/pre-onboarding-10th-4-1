@@ -1,4 +1,3 @@
-import { CiSearch } from "react-icons/ci";
 import { FaSpinner, FaPlusCircle } from "react-icons/fa";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 
@@ -49,7 +48,7 @@ const InputTodo = ({ setTodos, setInputText, inputText }: Props) => {
         setIsLoading(false);
       }
     },
-    [inputText, setTodos]
+    [inputText, setInputText, setTodos]
   );
 
   const onFormClick = () => {
