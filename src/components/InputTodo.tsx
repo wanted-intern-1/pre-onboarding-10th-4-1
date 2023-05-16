@@ -6,6 +6,7 @@ import { createTodo } from "../api/todo";
 import useFocus from "../hooks/useFocus";
 import { styled } from "styled-components";
 import { highlight } from "../utils/highlight";
+import { LoadingIcon, SearchIcon } from "../assets";
 
 type Props = {
   setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
@@ -94,9 +95,7 @@ const InputTodo = ({ setTodos }: Props) => {
 
   return (
     <S.FormContainer onSubmit={handleSubmit}>
-      <S.SearchIcon>
-        <FaSearch size={14} />
-      </S.SearchIcon>
+      <S.SearchIcon src={SearchIcon} alt="search"></S.SearchIcon>
       <S.InputText
         placeholder="Add new todo..."
         ref={ref}
@@ -105,9 +104,7 @@ const InputTodo = ({ setTodos }: Props) => {
         disabled={isLoading}
       />
       {isSearchLoading ? (
-        <S.SpinnerIcon>
-          <FaSpinner className="spinner" size={14} />
-        </S.SpinnerIcon>
+        <S.SpinnerIcon className="spinner" src={LoadingIcon} alt="spinner" />
       ) : null}
       {inputText ? (
         <S.Dropdown ref={listRef}>
@@ -129,9 +126,11 @@ const InputTodo = ({ setTodos }: Props) => {
             })}
           </S.DropdwonList>
           {isScrollBottom ? (
-            <S.DropdownSpinnerIcon>
-              <FaSpinner className="spinner" size={14} />
-            </S.DropdownSpinnerIcon>
+            <S.DropdownSpinnerIcon
+              className="spinner"
+              src={LoadingIcon}
+              alt="spinner"
+            />
           ) : null}
         </S.Dropdown>
       ) : null}
@@ -150,13 +149,15 @@ const S = {
     align-items: center;
     position: relative;
   `,
-  SearchIcon: styled.div`
+  SearchIcon: styled.img`
     position: absolute;
     left: 13px;
+    height: 20px;
   `,
-  SpinnerIcon: styled.div`
+  SpinnerIcon: styled.img`
     position: absolute;
     right: 13px;
+    height: 20px;
   `,
   InputText: styled.input`
     outline: none;
@@ -229,7 +230,7 @@ const S = {
       background: #d5f4f1;
     }
   `,
-  DropdownSpinnerIcon: styled.div`
-    padding: 6px 10px;
+  DropdownSpinnerIcon: styled.img`
+    height: 20px;
   `,
 };
