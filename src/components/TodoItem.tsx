@@ -7,17 +7,13 @@ type Props = {
   title: string;
 };
 
-let isComponentMounted = true;
-
 const TodoItem = ({ id, title }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const { deleteTodoItem } = useContext(TodoContext);
   const handleRemoveTodo = useCallback(async () => {
     try {
       setIsLoading(true);
-      if (isComponentMounted) {
-        await deleteTodoItem(id);
-      }
+      await deleteTodoItem(id);
     } catch (error) {
       console.error(error);
       alert("Something went wrong.");
@@ -26,11 +22,6 @@ const TodoItem = ({ id, title }: Props) => {
     }
   }, [id, deleteTodoItem]);
 
-  useEffect(() => {
-    return () => {
-      isComponentMounted = false;
-    };
-  }, []);
   return (
     <li className="item">
       <span>{title}</span>
