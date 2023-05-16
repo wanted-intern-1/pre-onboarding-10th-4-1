@@ -32,3 +32,19 @@ export const deleteTodo = async (id: string) => {
     throw new Error("API deleteTodo error");
   }
 };
+
+export const searchTodo = async (
+  inputText: string,
+  start: number,
+  limit: number
+) => {
+  try {
+    const response = await apiRequest.get(
+      `/search?q=${inputText}&page=${start}&limit=${limit}`
+    );
+
+    return response;
+  } catch (e) {
+    throw new Error("API searchTodo error");
+  }
+};

@@ -1,81 +1,59 @@
-import { CiSearch } from "react-icons/ci";
-import { FaSpinner, FaPlusCircle } from "react-icons/fa";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FaPlusCircle } from "react-icons/fa";
+import { useContext, useEffect, useState } from "react";
 
-import { ITodo } from "../../types/common";
-import { createTodo } from "../../api/todo";
 import useFocus from "../../hooks/useFocus";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import SearchSvg from "../../assets/SearchSvg";
-import SpinnberSvg from "../../assets/SpinnerSvg";
+import { TodoInputContext } from "../../context/TodoInputContext";
+import { TodoActionContex } from "../../context/TodoActionContext";
+import useDebounce from "../../hooks/useDebounce";
+import Spinner from "../common/Spinner";
 
-type Props = {
-  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
-  setInputText: React.Dispatch<React.SetStateAction<string>>;
-  inputText: string;
-};
-
-const InputTodo = ({ setTodos, setInputText, inputText }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
+const InputTodo = () => {
   const { ref, setFocus } = useFocus();
-  const [isClick, setIsClick] = useState(false);
+
+  const { isClick, setIsClick } = useContext(TodoActionContex);
+  const { setInputText } = useContext(TodoInputContext);
+  const [debounceValue, setDebounceValue] = useState("");
+
+  const { isLoading } = useContext(TodoActionContex);
 
   useEffect(() => {
     setFocus();
   }, [setFocus]);
 
-  const handleSubmit = useCallback(
-    async (e: FormEvent) => {
-      try {
-        e.preventDefault();
-        setIsLoading(true);
-
-        const trimmed = inputText.trim();
-        if (!trimmed) {
-          return alert("Please write something");
-        }
-
-        const newItem: Omit<ITodo, "id"> = { title: trimmed };
-        const { data } = await createTodo(newItem);
-
-        if (data) {
-          return setTodos((prev) => [...prev, data as ITodo]);
-        }
-      } catch (error) {
-        console.error(error);
-        alert("Something went wrong.");
-      } finally {
-        setInputText("");
-        setIsLoading(false);
-      }
-    },
-    [inputText, setTodos]
-  );
+  useDebounce(() => setInputText(debounceValue), 500);
 
   const onFormClick = () => {
     setIsClick((prev) => !prev);
   };
 
   return (
-    <S.FormWrap onClick={onFormClick} isClick={isClick} onSubmit={handleSubmit}>
+    <S.FormWrap onClick={onFormClick} isClick={isClick}>
       <S.SearchIcon />
       <S.Input
         placeholder="Add new todo..."
         ref={ref}
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
+        value={debounceValue}
+        onChange={(e) => setDebounceValue(e.target.value)}
         disabled={isLoading}
       />
-      {!isLoading ? (
+      {isLoading ? (
+        <Spinner />
+      ) : (
         <button className="input-submit" type="submit">
           <FaPlusCircle className="btn-plus" />
         </button>
-      ) : (
-        <FaSpinner className="spinner" />
       )}
     </S.FormWrap>
   );
 };
+
+const rotate = keyframes`
+  100% {
+      transform: rotate(360deg);
+  }
+`;
 
 const S = {
   FormWrap: styled.form<{ isClick: boolean }>`
@@ -108,10 +86,6 @@ const S = {
       width: 14px;
       height: 14px;
     }
-  `,
-  SpinnerIcon: styled(SpinnberSvg)`
-    display: flex;
-    align-self: center;
   `,
 };
 

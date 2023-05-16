@@ -1,34 +1,67 @@
-import React from "react";
 import { styled } from "styled-components";
 import SearchItem from "./SearchItem";
-import { ITodo } from "../../types/common";
+import { useContext, useEffect, useRef, useState } from "react";
+import { TodoInputContext } from "../../context/TodoInputContext";
+import useSearch from "../../hooks/useSearch";
+import { TodoActionContex } from "../../context/TodoActionContext";
+import Spinner from "../common/Spinner";
+import useIntersectionObeserver from "../../hooks/useIntersectionOberver";
+import MoreSvg from "../../assets/MoreSvg";
 
-type Props = {
-  todos: ITodo[];
-  inputText: string;
-};
+const INITIAL_PAGE = 1;
 
-const SearchList = ({ todos, inputText }: Props) => {
-  const filterKeywordTodos = todos.filter((todo) =>
-    todo.title.includes(inputText)
-  );
+const SearchList = () => {
+  const targetRef = useRef(null);
+  const [start, setStart] = useState(INITIAL_PAGE);
+  const limit = 10;
+
+  const { isLoading } = useContext(TodoActionContex);
+  const { inputText } = useContext(TodoInputContext);
+
+  const { data: fetchTodos, total } = useSearch({ inputText, start, limit });
+  const [todos, setTodos] = useState<Array<string>>([]);
+
+  const incresePage = () => {
+    if (start * limit < total) {
+      setStart((prevStart) => prevStart + INITIAL_PAGE);
+    }
+  };
+
+  useEffect(() => {
+    setTodos([]);
+    setStart(INITIAL_PAGE);
+  }, [inputText]);
+
+  useEffect(() => {
+    setTodos([...todos, ...fetchTodos]);
+  }, [fetchTodos]);
+
+  useIntersectionObeserver(targetRef, { threshold: 1.0 }, incresePage);
+
   return (
-    <S.Container>
-      {filterKeywordTodos && (
+    <S.Container isShow={todos.length > 0}>
+      {todos && (
         <ul>
-          {filterKeywordTodos.map((todo) => {
-            return (
-              <SearchItem key={todo.id} todo={todo} inputText={inputText} />
-            );
+          {todos.map((todo, idx) => {
+            return <SearchItem key={idx} todo={todo} />;
           })}
         </ul>
+      )}
+      {isLoading && todos.length >= limit ? (
+        <S.SpinnerLine>
+          <Spinner />
+        </S.SpinnerLine>
+      ) : (
+        <S.MoreLine ref={targetRef}>
+          <S.MoreIcon />
+        </S.MoreLine>
       )}
     </S.Container>
   );
 };
 
 const S = {
-  Container: styled.div`
+  Container: styled.div<{ isShow: boolean }>`
     border: 1px solid ${({ theme }) => theme.colors.neutral300};
     width: 364px;
     height: 164px;
@@ -43,6 +76,16 @@ const S = {
     top: 110%;
     background-color: #fff;
     z-index: 999;
+    display: ${({ isShow }) => (isShow ? "block" : "none")};
+  `,
+  SpinnerLine: styled.div`
+    display: flex;
+    justify-content: center;
+  `,
+  MoreIcon: styled(MoreSvg)``,
+  MoreLine: styled.div`
+    display: flex;
+    justify-content: center;
   `,
 };
 
