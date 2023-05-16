@@ -1,25 +1,29 @@
+import styled from "styled-components";
+
 type Props = {
   title: string;
 };
 const Header = ({ title }: Props) => {
-  const headerStyle: React.CSSProperties = {
-    padding: "20px 0",
-    lineHeight: "1.5em",
-  };
-  const titleStyle: React.CSSProperties = {
-    fontSize: "6rem",
-    fontWeight: "600",
-    marginBottom: "2rem",
-    lineHeight: "1em",
-    color: "#ececec",
-    textAlign: "center",
-  };
-
   return (
-    <header style={headerStyle}>
-      <h1 style={titleStyle}>{title}</h1>
-    </header>
+    <S.Header>
+      <S.Title>{title}</S.Title>
+    </S.Header>
   );
 };
 
 export default Header;
+
+const S = {
+  Header: styled.header`
+    padding: 20px 0;
+    line-height: 1.5em;
+  `,
+  Title: styled.h1`
+    font-size: 6rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    line-height: 1em;
+    color: #ececec;
+    text-align: center;
+  `,
+};

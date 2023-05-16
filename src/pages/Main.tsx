@@ -5,6 +5,7 @@ import { ITodo } from "../types/common";
 import InputTodo from "../components/InputTodo";
 import TodoList from "../components/TodoList";
 import { getTodoList } from "../api/todo";
+import styled from "styled-components";
 
 const Main = () => {
   const [todoListData, setTodoListData] = useState<ITodo[]>([]);
@@ -24,14 +25,29 @@ const Main = () => {
   }, []);
 
   return (
-    <div className="container">
-      <div className="inner">
+    <S.Container>
+      <S.Inner>
         <Header title="Toodos" />
         <InputTodo setTodos={setTodoListData} />
         <TodoList todos={todoListData} setTodos={setTodoListData} />
-      </div>
-    </div>
+      </S.Inner>
+    </S.Container>
   );
 };
 
 export default Main;
+
+const S = {
+  Container: styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+  `,
+  Inner: styled.div`
+    width: 100%;
+    padding: 8rem 10px 4rem;
+  `,
+};

@@ -1,10 +1,12 @@
-import { FaPlusCircle, FaSpinner } from "react-icons/fa";
+import { FaSpinner, FaSearch } from "react-icons/fa";
+
 import { useEffect } from "react";
 
 import { ITodo } from "../types/common";
 import { createTodo } from "../api/todo";
 import useFocus from "../hooks/useFocus";
 import useForm from "../hooks/useForm";
+import styled from "styled-components";
 
 type Props = {
   setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
@@ -41,9 +43,8 @@ const InputTodo = ({ setTodos }: Props) => {
   });
 
   return (
-    <form className="form-container" onSubmit={handleSubmit}>
-      <input
-        className="input-text"
+    <S.FormContainer onSubmit={handleSubmit}>
+      <S.Input
         placeholder="Add new todo..."
         name="search"
         ref={ref}
@@ -52,14 +53,86 @@ const InputTodo = ({ setTodos }: Props) => {
         disabled={isLoading}
       />
       {!isLoading ? (
-        <button className="input-submit" type="submit">
-          <FaPlusCircle className="btn-plus" />
-        </button>
+        <S.SubmitButton type="submit">
+          <FaSearch className="btn-plus" />
+        </S.SubmitButton>
       ) : (
         <FaSpinner className="spinner" />
       )}
-    </form>
+    </S.FormContainer>
   );
 };
 
 export default InputTodo;
+
+const S = {
+  FormContainer: styled.form`
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-evenly;
+    position: relative;
+
+    .spinner {
+      font-size: 20px;
+      animation: spin 2s linear infinite;
+      display: flex;
+      align-self: center;
+
+      position: absolute;
+      right: 12px;
+      top: 12px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  `,
+  Input: styled.input`
+    font-size: 1rem;
+    font-weight: 400;
+    width: 100%;
+    padding: 12px 13px 12px 41px;
+    background-color: transparent;
+
+    height: 45px;
+    outline: none;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    border-radius: 6px;
+
+    &:hover {
+      border: 2px solid rgba(0, 0, 0, 0.18);
+    }
+    &:focus {
+      border-color: rgba(0, 0, 0, 0.4);
+    }
+  `,
+  SubmitButton: styled.button`
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    height: 45px;
+    outline: none;
+    border: none;
+
+    position: absolute;
+    left: 16px;
+    top: 0;
+
+    .btn-plus {
+      color: #7d7d7d;
+      font-size: 14px;
+    }
+
+    .btn-plus:hover {
+      opacity: 0.5;
+    }
+  `,
+};
