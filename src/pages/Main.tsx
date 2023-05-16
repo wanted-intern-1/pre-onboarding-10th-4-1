@@ -1,29 +1,24 @@
-import { useEffect, useState } from "react";
+import TodoProvider, { TodoContext } from "../contexts/TodoContext";
 
+import Btn from "../components/common/Btn";
 import Header from "../components/Header";
-import { ITodo } from "../types/common";
 import InputTodo from "../components/InputTodo";
 import TodoList from "../components/TodoList";
-import { getTodoList } from "../api/todo";
+import { useContext } from "react";
 
 const Main = () => {
-  const [todoListData, setTodoListData] = useState<ITodo[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const { data } = await getTodoList();
-      setTodoListData(data || []);
-    })();
-  }, []);
+  const { todos } = useContext(TodoContext);
 
   return (
-    <div className="container">
-      <div className="inner">
-        <Header />
-        <InputTodo setTodos={setTodoListData} />
-        <TodoList todos={todoListData} setTodos={setTodoListData} />
+    <TodoProvider>
+      <div className="container">
+        <div className="inner">
+          <Header />
+          <InputTodo />
+          {todos ? <TodoList /> : <Btn icon="spinner" />}
+        </div>
       </div>
-    </div>
+    </TodoProvider>
   );
 };
 

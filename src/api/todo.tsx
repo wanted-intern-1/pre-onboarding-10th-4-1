@@ -3,7 +3,7 @@ import apiRequest from "./index";
 
 const RESOURCE = "/todos";
 
-export const getTodoList = async () => {
+const getTodoList = async () => {
   try {
     const response = await apiRequest.get(`${RESOURCE}`);
 
@@ -13,7 +13,7 @@ export const getTodoList = async () => {
   }
 };
 
-export const createTodo = async (data: Omit<ITodo, "id">) => {
+const createTodo = async (data: Omit<ITodo, "id">) => {
   try {
     const response = await apiRequest.post(`${RESOURCE}`, data);
 
@@ -23,7 +23,7 @@ export const createTodo = async (data: Omit<ITodo, "id">) => {
   }
 };
 
-export const deleteTodo = async (id: string) => {
+const deleteTodo = async (id: string) => {
   try {
     const response = await apiRequest.delete(`${RESOURCE}/${id}`);
 
@@ -31,4 +31,10 @@ export const deleteTodo = async (id: string) => {
   } catch (error) {
     throw new Error("API deleteTodo error");
   }
+};
+
+export const todoApi = {
+  getTodoList,
+  createTodo,
+  deleteTodo,
 };

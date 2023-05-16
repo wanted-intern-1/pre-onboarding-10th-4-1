@@ -1,42 +1,39 @@
-import { FaSpinner, FaTrash } from "react-icons/fa";
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 
-import { ITodo } from "../types/common";
-import { deleteTodo } from "../api/todo";
+import Btn from "./common/Btn";
+import { TodoContext } from "../contexts/TodoContext";
 
 type Props = {
   id: string;
   title: string;
-  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
 };
 
-const TodoItem = ({ id, title, setTodos }: Props) => {
+const TodoItem = ({ id, title }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const { deleteTodo } = useContext(TodoContext);
 
   const handleRemoveTodo = useCallback(async () => {
     try {
       setIsLoading(true);
       await deleteTodo(id);
-
-      setTodos((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
       console.error(error);
       alert("Something went wrong.");
     } finally {
       setIsLoading(false);
     }
-  }, [id, setTodos]);
+  }, [id]);
 
   return (
     <li className="item">
       <span>{title}</span>
       <div className="item-option">
         {!isLoading ? (
-          <button onClick={() => handleRemoveTodo()}>
-            <FaTrash className="btn-trash" />
+          <button onClick={handleRemoveTodo}>
+            <Btn icon="trash" />
           </button>
         ) : (
-          <FaSpinner className="spinner" />
+          <Btn icon="spinner" />
         )}
       </div>
     </li>
