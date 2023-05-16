@@ -1,32 +1,36 @@
 import { FaSpinner, FaTrash } from "react-icons/fa";
-import { useCallback, useState } from "react";
-
-import { ITodo } from "../types/common";
-import { deleteTodo } from "../api/todo";
+import { TodoContext } from "../contexts/TodoContext";
+import { useState, useCallback, useContext, useEffect } from "react";
 
 type Props = {
   id: string;
   title: string;
-  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
 };
 
-const TodoItem = ({ id, title, setTodos }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
+let isComponentMounted = true;
 
+const TodoItem = ({ id, title }: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const { deleteTodoItem } = useContext(TodoContext);
   const handleRemoveTodo = useCallback(async () => {
     try {
       setIsLoading(true);
-      await deleteTodo(id);
-
-      setTodos((prev) => prev.filter((item) => item.id !== id));
+      if (isComponentMounted) {
+        await deleteTodoItem(id);
+      }
     } catch (error) {
       console.error(error);
       alert("Something went wrong.");
     } finally {
       setIsLoading(false);
     }
-  }, [id, setTodos]);
+  }, [id, deleteTodoItem]);
 
+  useEffect(() => {
+    return () => {
+      isComponentMounted = false;
+    };
+  }, []);
   return (
     <li className="item">
       <span>{title}</span>
