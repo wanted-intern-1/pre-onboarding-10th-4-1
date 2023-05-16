@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
 
 import Header from "../components/common/Header";
-import { ITodo } from "../types/common";
+import { IRequest, ITodo } from "../types/common";
 import InputTodo from "../components/todo/InputTodo";
 import TodoList from "../components/todo/TodoList";
 import { getTodoList } from "../api/todo";
 import SearchList from "../components/search/SearchList";
 import { styled } from "styled-components";
+import useDebounce from "../hooks/useDebounce";
 
 const Main = () => {
   const [todoListData, setTodoListData] = useState<ITodo[]>([]);
   const [inputText, setInputText] = useState("");
+  const [debounceValue, setDebounceValue] = useState<string>("");
+
+  useDebounce(() => setDebounceValue(inputText), 500);
 
   useEffect(() => {
     (async () => {
@@ -30,7 +34,7 @@ const Main = () => {
             setTodos={setTodoListData}
           />
           {inputText.length > 0 && (
-            <SearchList inputText={inputText} todos={todoListData} />
+            <SearchList inputText={inputText} debounceValue={debounceValue} />
           )}
         </S.DropDownContainer>
         <TodoList todos={todoListData} setTodos={setTodoListData} />

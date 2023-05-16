@@ -10,7 +10,10 @@ const baseInstance = axios.create({
   },
 });
 
-baseInstance.interceptors.response.use(({ data }) => data);
+baseInstance.interceptors.response.use(({ data }) => {
+  console.log(data);
+  return data;
+});
 
 const apiRequest = {
   get: (url: string, request?: AxiosRequestConfig<any> | undefined) =>

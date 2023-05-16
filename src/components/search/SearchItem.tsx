@@ -1,41 +1,26 @@
-import React, { useRef, useEffect, useState } from "react";
-import { ITodo } from "../../types/common";
+import React from "react";
 import { styled } from "styled-components";
 import Highlighter from "react-highlight-words";
 import { theme } from "../../styles/theme";
-import useHover from "../../hooks/useHover";
 
 type Props = {
-  todo: ITodo;
+  keyword: string;
   inputText: string;
 };
 
-const SearchItem = ({ todo, inputText }: Props) => {
-  const [hoverRef, isHoverd] = useHover<HTMLLIElement>();
-  const [clickId, setClickId] = useState("");
-
-  useEffect(() => {
-    setClickId("");
-  }, [isHoverd]);
-
+const SearchItem = ({ keyword, inputText }: Props) => {
   return (
-    <S.TodoLine ref={hoverRef} onClick={() => setClickId(todo.id)}>
+    <S.TodoLine>
       <Highlighter
         highlightStyle={{
           color: theme.colors.green500,
           backgroundColor: "transparent",
         }}
         searchWords={[inputText]}
-        textToHighlight={todo.title}
+        textToHighlight={keyword}
       >
-        {todo.title}
+        {keyword}
       </Highlighter>
-      {isHoverd && clickId !== todo.id ? (
-        <S.HoverNotice>hover</S.HoverNotice>
-      ) : (
-        ""
-      )}
-      {clickId === todo.id ? <S.ClickNotice>click</S.ClickNotice> : ""}
     </S.TodoLine>
   );
 };
@@ -46,6 +31,10 @@ const S = {
     cursor: pointer;
     &:hover {
       background-color: ${({ theme }) => theme.colors.neutral100};
+      border-radius: 3px;
+    }
+    &:active {
+      background-color: ${({ theme }) => theme.colors.green100};
       border-radius: 3px;
     }
     display: flex;
