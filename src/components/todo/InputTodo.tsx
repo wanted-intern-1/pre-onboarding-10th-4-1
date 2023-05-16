@@ -1,7 +1,6 @@
 import { FaPlusCircle, FaSpinner } from "react-icons/fa";
 import { useEffect, useState } from "react";
 
-import { ITodo } from "../../types/common";
 import SearchSvg from "../../assets/SearchSvg";
 import SpinnberSvg from "../../assets/SpinnerSvg";
 import styled from "styled-components";
@@ -9,17 +8,14 @@ import useFocus from "../../hooks/useFocus";
 
 type Props = {
   isLoading: boolean;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
   setInputText: React.Dispatch<React.SetStateAction<string>>;
-  onSubmit: React.FormEventHandler<HTMLFormElement>;
+  onSubmit: (inputText: string) => Promise<void>;
   inputText: string;
 };
 
 const InputTodo = ({
   isLoading,
-  setIsLoading,
-  setTodos,
+
   setInputText,
   inputText,
   onSubmit,
@@ -36,7 +32,14 @@ const InputTodo = ({
   };
 
   return (
-    <S.FormWrap onClick={onFormClick} isClick={isClick} onSubmit={onSubmit}>
+    <S.FormWrap
+      onClick={onFormClick}
+      isClick={isClick}
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit(inputText);
+      }}
+    >
       <S.SearchIcon />
       <S.Input
         placeholder="Add new todo..."

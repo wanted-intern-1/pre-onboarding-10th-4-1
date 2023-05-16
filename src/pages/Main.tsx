@@ -54,11 +54,9 @@ const Main = () => {
         <S.DropDownContainer>
           <InputTodo
             isLoading={isLoading}
-            setIsLoading={setIsLoading}
             inputText={inputText}
             setInputText={setInputText}
-            setTodos={setTodoListData}
-            onSubmit={(e) => handleSubmit(inputText)}
+            onSubmit={handleSubmit}
           />
           <SearchList
             inputText={inputText}
