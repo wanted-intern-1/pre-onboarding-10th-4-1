@@ -1,9 +1,7 @@
-import React, { useRef, useEffect, useState, useContext } from "react";
-import { ITodo } from "../../types/common";
+import React, { useContext } from "react";
 import { styled } from "styled-components";
 import Highlighter from "react-highlight-words";
 import { theme } from "../../styles/theme";
-import useHover from "../../hooks/useHover";
 import { TodoInputContext } from "../../context/TodoInputContext";
 
 type Props = {

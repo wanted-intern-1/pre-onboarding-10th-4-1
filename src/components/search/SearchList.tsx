@@ -15,7 +15,7 @@ const SearchList = () => {
   const [start, setStart] = useState(INITIAL_PAGE);
   const limit = 10;
 
-  const { isLoading } = useContext(TodoActionContex);
+  const { isLoading, setOutSideClick } = useContext(TodoActionContex);
   const { inputText } = useContext(TodoInputContext);
 
   const { data: fetchTodos, total } = useSearch({ inputText, start, limit });
@@ -30,6 +30,7 @@ const SearchList = () => {
   useEffect(() => {
     setTodos([]);
     setStart(INITIAL_PAGE);
+    setOutSideClick(false);
   }, [inputText]);
 
   useEffect(() => {

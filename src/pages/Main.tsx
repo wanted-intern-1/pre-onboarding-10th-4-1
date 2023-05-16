@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 import Header from "../components/common/Header";
 import { ITodo } from "../types/common";
@@ -7,10 +7,13 @@ import TodoList from "../components/todo/TodoList";
 import { getTodoList } from "../api/todo";
 import SearchList from "../components/search/SearchList";
 import { styled } from "styled-components";
+import useOutsideClick from "../hooks/useOutsideClick";
+import { TodoActionContex } from "../context/TodoActionContext";
 
 const Main = () => {
   const [todoListData, setTodoListData] = useState<ITodo[]>([]);
-
+  const { setOutSideClick, outSideClick } = useContext(TodoActionContex);
+  const searchRef = useRef(null);
   useEffect(() => {
     (async () => {
       const { data } = await getTodoList();
@@ -18,13 +21,15 @@ const Main = () => {
     })();
   }, []);
 
+  useOutsideClick(searchRef, () => setOutSideClick(true));
+
   return (
     <S.Container>
       <S.Wrap>
         <Header />
-        <S.DropDownContainer>
+        <S.DropDownContainer ref={searchRef}>
           <InputTodo />
-          <SearchList />
+          {!outSideClick && <SearchList />}
         </S.DropDownContainer>
         <TodoList todos={todoListData} setTodos={setTodoListData} />
       </S.Wrap>

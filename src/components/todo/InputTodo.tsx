@@ -12,7 +12,7 @@ import Spinner from "../common/Spinner";
 const InputTodo = () => {
   const { ref, setFocus } = useFocus();
 
-  const { isClick, setIsClick } = useContext(TodoActionContex);
+  const { outSideClick, setOutSideClick } = useContext(TodoActionContex);
   const { setInputText } = useContext(TodoInputContext);
   const [debounceValue, setDebounceValue] = useState("");
 
@@ -25,11 +25,11 @@ const InputTodo = () => {
   useDebounce(() => setInputText(debounceValue), 500);
 
   const onFormClick = () => {
-    setIsClick((prev) => !prev);
+    setOutSideClick(false);
   };
 
   return (
-    <S.FormWrap onClick={onFormClick} isClick={isClick}>
+    <S.FormWrap onClick={onFormClick} isClick={outSideClick}>
       <S.SearchIcon />
       <S.Input
         placeholder="Add new todo..."
@@ -59,7 +59,7 @@ const S = {
   FormWrap: styled.form<{ isClick: boolean }>`
     border: 1px solid
       ${({ theme, isClick }) =>
-        isClick ? theme.colors.neutral600 : theme.colors.neutral300};
+        isClick ? theme.colors.neutral300 : theme.colors.neutral600};
     border-radius: 6px;
     display: flex;
     justify-content: center;

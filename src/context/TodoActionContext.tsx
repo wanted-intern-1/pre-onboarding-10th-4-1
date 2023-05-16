@@ -1,8 +1,8 @@
 import React, { createContext, useState } from "react";
 
 interface ITodoAction {
-  isClick: boolean;
-  setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
+  outSideClick: boolean;
+  setOutSideClick: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -12,18 +12,18 @@ type Props = {
 };
 
 export const TodoActionContex = createContext<ITodoAction>({
-  isClick: false,
-  setIsClick: () => {},
+  outSideClick: false,
+  setOutSideClick: () => {},
   isLoading: false,
   setIsLoading: () => {},
 });
 
 export const TodoActionProvider = ({ children }: Props) => {
-  const [isClick, setIsClick] = useState(false);
+  const [outSideClick, setOutSideClick] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   return (
     <TodoActionContex.Provider
-      value={{ isClick, setIsClick, isLoading, setIsLoading }}
+      value={{ outSideClick, setOutSideClick, isLoading, setIsLoading }}
     >
       {children}
     </TodoActionContex.Provider>
