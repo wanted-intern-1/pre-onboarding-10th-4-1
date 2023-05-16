@@ -17,13 +17,9 @@ const InputTodo = ({ setTodos }: Props) => {
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [isScrollBottom, setIsScrollBottom] = useState(false);
   const [items, setItems] = useState<string[]>([]);
-  const { ref, setFocus } = useFocus();
+  const [isFocused, setIsFocused] = useState(false);
 
   const listRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setFocus();
-  }, [setFocus]);
 
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
@@ -87,9 +83,12 @@ const InputTodo = ({ setTodos }: Props) => {
   }, [isScrollBottom, requestItem]);
 
   useEffect(() => {
+    if (listRef.current === null) {
+      return;
+    }
     const list = listRef.current;
-    list?.addEventListener("scroll", handleScroll);
-    return () => list?.removeEventListener("scroll", handleScroll);
+    list.addEventListener("scroll", handleScroll);
+    return () => list.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
   return (
@@ -97,10 +96,11 @@ const InputTodo = ({ setTodos }: Props) => {
       <S.SearchIcon src={SearchIcon} alt="search"></S.SearchIcon>
       <S.InputText
         placeholder="Add new todo..."
-        ref={ref}
         value={inputText}
         onChange={handleChangeInput}
         disabled={isLoading}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
       />
       <S.SpinnerIcon
         className="spinner"
@@ -108,10 +108,10 @@ const InputTodo = ({ setTodos }: Props) => {
         alt="spinner"
         isVisible={isSearchLoading}
       />
-      <S.DropdownWrap>
+      <S.DropdownWrap isVisible={isFocused}>
         <DropdownList
-          items={items}
           ref={listRef}
+          items={items}
           inputText={inputText}
           isScrollBottom={isScrollBottom}
         />
@@ -173,10 +173,11 @@ const S = {
     display: flex;
     align-items: center;
   `,
-  DropdownWrap: styled.div`
+  DropdownWrap: styled.div<{ isVisible: boolean }>`
     width: 100%;
     position: absolute;
     top: 48px;
     z-index: 2;
+    display: ${(props) => (props.isVisible ? "flex" : "none")};
   `,
 };
