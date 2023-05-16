@@ -48,6 +48,11 @@ const S = {
   `,
   Inner: styled.div`
     width: 100%;
+    max-width: 364px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding: 8rem 10px 4rem;
   `,
 };

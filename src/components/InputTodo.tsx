@@ -44,6 +44,9 @@ const InputTodo = ({ setTodos }: Props) => {
 
   return (
     <S.FormContainer onSubmit={handleSubmit}>
+      <S.SubmitIconDiv>
+        <FaSearch className="btn-plus" />
+      </S.SubmitIconDiv>
       <S.Input
         placeholder="Add new todo..."
         name="search"
@@ -52,13 +55,7 @@ const InputTodo = ({ setTodos }: Props) => {
         onChange={handleChange}
         disabled={isLoading}
       />
-      {!isLoading ? (
-        <S.SubmitButton type="submit">
-          <FaSearch className="btn-plus" />
-        </S.SubmitButton>
-      ) : (
-        <FaSpinner className="spinner" />
-      )}
+      {isLoading && <FaSpinner className="spinner" />}
     </S.FormContainer>
   );
 };
@@ -102,17 +99,17 @@ const S = {
 
     height: 45px;
     outline: none;
-    border: 1px solid rgba(0, 0, 0, 0.18);
+    border: 1px solid rgba(159, 159, 159, 0.4);
     border-radius: 6px;
 
     &:hover {
-      border: 2px solid rgba(0, 0, 0, 0.18);
+      border: 3px solid rgba(159, 159, 159, 0.4);
     }
     &:focus {
       border-color: rgba(0, 0, 0, 0.4);
     }
   `,
-  SubmitButton: styled.button`
+  SubmitIconDiv: styled.div`
     background: transparent;
     cursor: pointer;
     display: flex;

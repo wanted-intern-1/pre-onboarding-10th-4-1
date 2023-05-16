@@ -9,11 +9,11 @@ type Props = {
 
 const TodoList = ({ todos, setTodos }: Props) => {
   return todos.length ? (
-    <ul>
+    <S.UnorderedList>
       {todos.map(({ id, title }) => (
         <TodoItem key={id} id={id} title={title} setTodos={setTodos} />
       ))}
-    </ul>
+    </S.UnorderedList>
   ) : (
     <S.EmptyListDiv className="empty-list">...</S.EmptyListDiv>
   );
@@ -21,6 +21,9 @@ const TodoList = ({ todos, setTodos }: Props) => {
 export default TodoList;
 
 const S = {
+  UnorderedList: styled.ul`
+    width: 100%;
+  `,
   EmptyListDiv: styled.div`
     width: 100%;
     display: flex;
