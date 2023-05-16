@@ -1,12 +1,11 @@
-import { FaSpinner, FaSearch } from "react-icons/fa";
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 
 import { ITodo } from "../types/common";
 import { createTodo } from "../api/todo";
 import useFocus from "../hooks/useFocus";
 import { styled } from "styled-components";
-import { highlight } from "../utils/highlight";
 import { LoadingIcon, SearchIcon } from "../assets";
+import DropdownList from "./DropdownList";
 
 type Props = {
   setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
@@ -103,37 +102,20 @@ const InputTodo = ({ setTodos }: Props) => {
         onChange={handleChangeInput}
         disabled={isLoading}
       />
-      {isSearchLoading ? (
-        <S.SpinnerIcon className="spinner" src={LoadingIcon} alt="spinner" />
-      ) : null}
-      {inputText ? (
-        <S.Dropdown ref={listRef}>
-          <S.DropdwonList>
-            <S.DropdwonItem
-              dangerouslySetInnerHTML={{
-                __html: highlight(inputText, inputText),
-              }}
-            />
-            {items.map((item) => {
-              return (
-                <S.DropdwonItem
-                  key={item}
-                  dangerouslySetInnerHTML={{
-                    __html: highlight(item, inputText),
-                  }}
-                />
-              );
-            })}
-          </S.DropdwonList>
-          {isScrollBottom ? (
-            <S.DropdownSpinnerIcon
-              className="spinner"
-              src={LoadingIcon}
-              alt="spinner"
-            />
-          ) : null}
-        </S.Dropdown>
-      ) : null}
+      <S.SpinnerIcon
+        className="spinner"
+        src={LoadingIcon}
+        alt="spinner"
+        isVisible={isSearchLoading}
+      />
+      <S.DropdownWrap>
+        <DropdownList
+          items={items}
+          ref={listRef}
+          inputText={inputText}
+          isScrollBottom={isScrollBottom}
+        />
+      </S.DropdownWrap>
     </S.FormContainer>
   );
 };
@@ -154,10 +136,11 @@ const S = {
     left: 13px;
     height: 20px;
   `,
-  SpinnerIcon: styled.img`
+  SpinnerIcon: styled.img<{ isVisible: boolean }>`
     position: absolute;
     right: 13px;
     height: 20px;
+    display: ${(props) => (props.isVisible ? "flex" : "none")};
   `,
   InputText: styled.input`
     outline: none;
@@ -190,47 +173,10 @@ const S = {
     display: flex;
     align-items: center;
   `,
-  Dropdown: styled.div`
+  DropdownWrap: styled.div`
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     position: absolute;
     top: 48px;
-    padding: 9px 4px;
-    background: #ffffff;
-    border: 1px solid #dedede;
-    box-shadow: 0px 0px 1px rgba(50, 50, 50, 0.05),
-      0px 2px 4px rgba(50, 50, 50, 0.1);
-    border-radius: 5px;
-    max-height: 164px;
-    overflow-y: scroll;
     z-index: 2;
-  `,
-  DropdwonList: styled.ul`
-    width: 100%;
-    list-style: none;
-  `,
-  DropdwonItem: styled.li`
-    width: 100%;
-    padding: 6px 10px;
-    font-size: 14px;
-
-    strong {
-      font-weight: 400;
-      color: #2bc9ba;
-    }
-
-    &:hover {
-      background-color: #f2f2f2;
-      border-radius: 3px;
-    }
-
-    &:active {
-      background: #d5f4f1;
-    }
-  `,
-  DropdownSpinnerIcon: styled.img`
-    height: 20px;
   `,
 };
