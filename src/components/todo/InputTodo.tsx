@@ -6,6 +6,8 @@ import { ITodo } from "../../types/common";
 import { createTodo } from "../../api/todo";
 import useFocus from "../../hooks/useFocus";
 import styled from "styled-components";
+import SearchSvg from "../../assets/SearchSvg";
+import SpinnberSvg from "../../assets/SpinnerSvg";
 
 type Props = {
   setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
@@ -95,21 +97,19 @@ const S = {
     }
   `,
   Input: styled.input`
-    width: 310px;
+    width: 280px;
     line-height: 20px;
     font-size: 1rem;
     padding-right: 5px;
     padding-left: 10px;
   `,
-  SearchIcon: styled(CiSearch)`
-    color: ${({ theme }) => theme.colors.neutral700};
+  SearchIcon: styled(SearchSvg)`
     &:path {
       width: 14px;
       height: 14px;
     }
   `,
-  SpinnerIcon: styled(FaSpinner)`
-    animation: spin 2s linear infinite;
+  SpinnerIcon: styled(SpinnberSvg)`
     display: flex;
     align-self: center;
   `,
