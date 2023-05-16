@@ -5,11 +5,12 @@ import { theme } from "../../styles/theme";
 type Props = {
   search: string;
   inputText: string;
+  onClick: (inputText: string) => Promise<void>;
 };
 
-const SearchItem = ({ search, inputText }: Props) => {
+const SearchItem = ({ search, inputText, onClick }: Props) => {
   return (
-    <S.TodoLine onClick={() => {}}>
+    <S.TodoLine onClick={() => onClick(search)}>
       <Highlighter
         highlightStyle={{
           color: theme.colors.green500,

@@ -8,9 +8,11 @@ import useSearch from "../../hooks/useSearch";
 
 type Props = {
   inputText: string;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  onClick: (inputText: string) => Promise<void>;
 };
 
-const SearchList = ({ inputText }: Props) => {
+const SearchList = ({ inputText, setIsLoading, onClick }: Props) => {
   const debouncedInputText = useDebounce(inputText, 500);
 
   const { searches, isLoading, isFetching, hasNextPage, fetchNextPage } =
@@ -22,6 +24,10 @@ const SearchList = ({ inputText }: Props) => {
     if (!isLoading) fetchNextPage();
   }, [inView]);
 
+  useEffect(() => {
+    setIsLoading(isLoading);
+  }, [isLoading]);
+
   return (
     <>
       {searches?.length !== 0 && !isLoading && (
@@ -29,7 +35,11 @@ const SearchList = ({ inputText }: Props) => {
           <ul>
             {searches?.map((search, i) => (
               <>
-                <SearchItem search={search} inputText={debouncedInputText} />
+                <SearchItem
+                  search={search}
+                  inputText={debouncedInputText}
+                  onClick={onClick}
+                />
                 {i === searches.length - 1 && hasNextPage && (
                   <S.Ref ref={ref}></S.Ref>
                 )}

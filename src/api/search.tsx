@@ -8,7 +8,6 @@ export const getSearch = async (data: {
   limit?: number;
 }) => {
   try {
-    console.log("getSearch!", data);
     const response = await apiRequest.get(`${RESOURCE}`, {
       params: { ...data },
     });
