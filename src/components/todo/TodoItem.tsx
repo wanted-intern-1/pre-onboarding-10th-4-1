@@ -1,31 +1,30 @@
-import { FaSpinner, FaTrash } from "react-icons/fa";
-import { useCallback, useState } from "react";
+import { FaSpinner, FaTrash } from 'react-icons/fa';
+import { useCallback, useState } from 'react';
 
-import { ITodo } from "../../types/common";
-import { deleteTodo } from "../../api/todo";
+import { ITodo } from '../../types/common';
+import { deleteTodo } from '../../api/todo';
+import { useTodoListDispatchContext } from '../../contexts/TodoListProvider';
 
 type Props = {
   id: string;
   title: string;
-  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
 };
 
-const TodoItem = ({ id, title, setTodos }: Props) => {
+const TodoItem = ({ id, title }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const { onDeleteTodo } = useTodoListDispatchContext();
 
   const handleRemoveTodo = useCallback(async () => {
     try {
       setIsLoading(true);
-      await deleteTodo(id);
-
-      setTodos((prev) => prev.filter((item) => item.id !== id));
+      await onDeleteTodo(id);
     } catch (error) {
       console.error(error);
-      alert("Something went wrong.");
+      alert('Something went wrong.');
     } finally {
       setIsLoading(false);
     }
-  }, [id, setTodos]);
+  }, [id, onDeleteTodo]);
 
   return (
     <li className="item">

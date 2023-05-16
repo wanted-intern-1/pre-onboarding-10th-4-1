@@ -1,24 +1,20 @@
-import { CiSearch } from "react-icons/ci";
-import { FaSpinner, FaPlusCircle } from "react-icons/fa";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FaSpinner, FaPlusCircle } from 'react-icons/fa';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
 
-import { ITodo } from "../../types/common";
-import { createTodo } from "../../api/todo";
-import useFocus from "../../hooks/useFocus";
-import styled from "styled-components";
-import SearchSvg from "../../assets/SearchSvg";
-import SpinnberSvg from "../../assets/SpinnerSvg";
+import { ITodo } from '../../types/common';
+import useFocus from '../../hooks/useFocus';
+import styled from 'styled-components';
+import SearchSvg from '../../assets/SearchSvg';
+import SpinnberSvg from '../../assets/SpinnerSvg';
+import { useInputContext } from '../../contexts/InputProvider';
+import { useTodoListDispatchContext } from '../../contexts/TodoListProvider';
 
-type Props = {
-  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
-  setInputText: React.Dispatch<React.SetStateAction<string>>;
-  inputText: string;
-};
-
-const InputTodo = ({ setTodos, setInputText, inputText }: Props) => {
+const InputTodo = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { ref, setFocus } = useFocus();
   const [isClick, setIsClick] = useState(false);
+  const { inputText, handleInputChange } = useInputContext();
+  const { onCreateTodo } = useTodoListDispatchContext();
 
   useEffect(() => {
     setFocus();
@@ -32,24 +28,20 @@ const InputTodo = ({ setTodos, setInputText, inputText }: Props) => {
 
         const trimmed = inputText.trim();
         if (!trimmed) {
-          return alert("Please write something");
+          return alert('Please write something');
         }
 
-        const newItem: Omit<ITodo, "id"> = { title: trimmed };
-        const { data } = await createTodo(newItem);
-
-        if (data) {
-          return setTodos((prev) => [...prev, data as ITodo]);
-        }
+        const newItem: Omit<ITodo, 'id'> = { title: trimmed };
+        await onCreateTodo(newItem);
       } catch (error) {
         console.error(error);
-        alert("Something went wrong.");
+        alert('Something went wrong.');
       } finally {
-        setInputText("");
+        handleInputChange('');
         setIsLoading(false);
       }
     },
-    [inputText, setTodos]
+    [inputText, handleInputChange, onCreateTodo]
   );
 
   const onFormClick = () => {
@@ -63,7 +55,7 @@ const InputTodo = ({ setTodos, setInputText, inputText }: Props) => {
         placeholder="Add new todo..."
         ref={ref}
         value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
+        onChange={(e) => handleInputChange(e.target.value)}
         disabled={isLoading}
       />
       {!isLoading ? (
@@ -80,8 +72,7 @@ const InputTodo = ({ setTodos, setInputText, inputText }: Props) => {
 const S = {
   FormWrap: styled.form<{ isClick: boolean }>`
     border: 1px solid
-      ${({ theme, isClick }) =>
-        isClick ? theme.colors.neutral600 : theme.colors.neutral300};
+      ${({ theme, isClick }) => (isClick ? theme.colors.neutral600 : theme.colors.neutral300)};
     border-radius: 6px;
     display: flex;
     justify-content: center;

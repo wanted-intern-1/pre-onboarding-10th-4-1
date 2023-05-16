@@ -1,25 +1,20 @@
-import React from "react";
-import { styled } from "styled-components";
-import SearchItem from "./SearchItem";
-import { ITodo } from "../../types/common";
+import React from 'react';
+import { styled } from 'styled-components';
+import SearchItem from './SearchItem';
+import { useInputContext } from '../../contexts/InputProvider';
+import { useTodoListContext } from '../../contexts/TodoListProvider';
 
-type Props = {
-  todos: ITodo[];
-  inputText: string;
-};
+const SearchList = () => {
+  const { inputText } = useInputContext();
+  const { todos } = useTodoListContext();
 
-const SearchList = ({ todos, inputText }: Props) => {
-  const filterKeywordTodos = todos.filter((todo) =>
-    todo.title.includes(inputText)
-  );
+  const filterKeywordTodos = todos.filter((todo) => todo.title.includes(inputText));
   return (
     <S.Container>
       {filterKeywordTodos && (
         <ul>
           {filterKeywordTodos.map((todo) => {
-            return (
-              <SearchItem key={todo.id} todo={todo} inputText={inputText} />
-            );
+            return <SearchItem key={todo.id} todo={todo} inputText={inputText} />;
           })}
         </ul>
       )}

@@ -1,9 +1,9 @@
 ---
 name: Feat
 about: Suggest an idea for this project
-title: "[Feat]"
+title: '[Feat]'
 labels: enhancement
-assignees: ""
+assignees: ''
 ---
 
 ## 이슈 내용

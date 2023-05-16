@@ -1,39 +1,50 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect } from 'react';
 
-import Header from "../components/common/Header";
-import { ITodo } from "../types/common";
-import InputTodo from "../components/todo/InputTodo";
-import TodoList from "../components/todo/TodoList";
-import { getTodoList } from "../api/todo";
-import SearchList from "../components/search/SearchList";
-import { styled } from "styled-components";
+import Header from '../components/common/Header';
+import { ITodo } from '../types/common';
+import InputTodo from '../components/todo/InputTodo';
+import TodoList from '../components/todo/TodoList';
+import { createTodo, deleteTodo, getTodoList } from '../api/todo';
+import SearchList from '../components/search/SearchList';
+import { styled } from 'styled-components';
+import { useInputContext } from '../contexts/InputProvider';
+import TodoListProvider from '../contexts/TodoListProvider';
+import useAsync from '../hooks/useAsync';
 
 const Main = () => {
-  const [todoListData, setTodoListData] = useState<ITodo[]>([]);
-  const [inputText, setInputText] = useState("");
+  const { inputText } = useInputContext();
+  const { value, callback } = useAsync({
+    fn: getTodoList,
+    deps: [],
+  });
 
   useEffect(() => {
-    (async () => {
-      const { data } = await getTodoList();
-      setTodoListData(data || []);
-    })();
+    callback();
+  }, [callback]);
+
+  const handleCreateTodo = useCallback(async (newTodo: Omit<ITodo, 'id'>) => {
+    return await createTodo(newTodo);
+  }, []);
+
+  const handleDeleteTodo = useCallback(async (id: string) => {
+    return await deleteTodo(id);
   }, []);
 
   return (
     <S.Container>
       <S.Wrap>
         <Header />
-        <S.DropDownContainer>
-          <InputTodo
-            inputText={inputText}
-            setInputText={setInputText}
-            setTodos={setTodoListData}
-          />
-          {inputText.length > 0 && (
-            <SearchList inputText={inputText} todos={todoListData} />
-          )}
-        </S.DropDownContainer>
-        <TodoList todos={todoListData} setTodos={setTodoListData} />
+        <TodoListProvider
+          initialState={value || []}
+          handleCreateTodo={handleCreateTodo}
+          handleDeleteTodo={handleDeleteTodo}
+        >
+          <S.DropDownContainer>
+            <InputTodo />
+            {inputText.length > 0 && <SearchList />}
+          </S.DropDownContainer>
+          <TodoList />
+        </TodoListProvider>
       </S.Wrap>
     </S.Container>
   );

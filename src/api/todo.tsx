@@ -1,7 +1,7 @@
-import { ITodo } from "../types/common";
-import apiRequest from "./index";
+import { ITodo } from '../types/common';
+import apiRequest from './index';
 
-const RESOURCE = "/todos";
+const RESOURCE = '/todos';
 
 export const getTodoList = async () => {
   try {
@@ -9,17 +9,17 @@ export const getTodoList = async () => {
 
     return response;
   } catch (error) {
-    throw new Error("API getTodoList error");
+    throw new Error('API getTodoList error');
   }
 };
 
-export const createTodo = async (data: Omit<ITodo, "id">) => {
+export const createTodo = async (data: Omit<ITodo, 'id'>) => {
   try {
     const response = await apiRequest.post(`${RESOURCE}`, data);
 
     return response;
   } catch (error) {
-    throw new Error("API createTodo error");
+    throw new Error('API createTodo error');
   }
 };
 
@@ -29,6 +29,6 @@ export const deleteTodo = async (id: string) => {
 
     return response;
   } catch (error) {
-    throw new Error("API deleteTodo error");
+    throw new Error('API deleteTodo error');
   }
 };
