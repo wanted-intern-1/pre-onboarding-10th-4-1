@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ITodo } from "../../types/common";
 import { styled } from "styled-components";
 import Highlighter from "react-highlight-words";
