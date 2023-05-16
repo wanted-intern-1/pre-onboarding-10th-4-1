@@ -8,10 +8,8 @@ export const useIntersect = (): [
   const [inView, setInView] = useState(false);
   const observer = useRef(
     new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) setInView(false);
-      else setInView(true);
-      // if (!entry.isIntersecting) return;
-      // fn();
+      if (entry.isIntersecting) setInView(true);
+      else setInView(false);
     })
   );
 

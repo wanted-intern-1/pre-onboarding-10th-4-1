@@ -4,6 +4,7 @@ import Btn from "../components/common/Btn";
 import Header from "../components/Header";
 import InputTodo from "../components/InputTodo";
 import TodoList from "../components/TodoList";
+import { styled } from "styled-components";
 import { useContext } from "react";
 
 const Main = () => {
@@ -12,14 +13,23 @@ const Main = () => {
   return (
     <TodoProvider>
       <div className="container">
-        <div className="inner">
+        <S.inner>
           <Header />
           <InputTodo />
           {todos ? <TodoList /> : <Btn icon="spinner" />}
-        </div>
+        </S.inner>
       </div>
     </TodoProvider>
   );
+};
+
+const S = {
+  inner: styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  `,
 };
 
 export default Main;

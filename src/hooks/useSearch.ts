@@ -4,7 +4,15 @@ import { searchApi } from "../api/search";
 import useDebounce from "./useDebounce";
 import { useIntersect } from "./useIntersect";
 
-const useSearch = (keyword: string) => {
+export type IUseSearch = {
+  searches: string[] | undefined;
+  ref: React.Dispatch<React.SetStateAction<HTMLDivElement | null>>;
+  inView: boolean;
+  isLoading: boolean;
+  isFetching: boolean;
+};
+
+const useSearch = (keyword: string): IUseSearch => {
   const [page, setPage] = useState(1);
   const [searches, setSearches] = useState<string[] | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
@@ -60,7 +68,7 @@ const useSearch = (keyword: string) => {
       : setSearches((prev) => prev && [...prev, ...res.data.result]);
     if (
       searches &&
-      searches.length + res.data.result.length === res.data.result.total
+      searches.length + res.data.result.length === res.data.total
     ) {
       setHasNextPage(false);
     }

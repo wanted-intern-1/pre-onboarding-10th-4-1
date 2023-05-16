@@ -1,20 +1,26 @@
-import { FormEvent, useCallback, useContext, useEffect, useState } from "react";
+import { FormEvent, useCallback, useContext, useState } from "react";
 
+import { BiSearch } from "react-icons/bi";
 import Btn from "./common/Btn";
 import InputDropBox from "./InputDropbox";
 import { TodoContext } from "../contexts/TodoContext";
 import { styled } from "styled-components";
 import useFocus from "../hooks/useFocus";
+import useSearch from "../hooks/useSearch";
 
 const InputTodo = () => {
   const { createTodo, isLoading } = useContext(TodoContext);
   const [inputText, setInputText] = useState("");
+  const search = useSearch(inputText);
+  const [isFocused, setIsFocused] = useState(false);
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
 
   const { ref, setFocus } = useFocus();
 
-  useEffect(() => {
-    setFocus();
-  }, [setFocus]);
+  // useEffect(() => {
+  //   setFocus();
+  // }, [setFocus]);
 
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
@@ -32,46 +38,41 @@ const InputTodo = () => {
 
   return (
     <>
-      <S.cont onSubmit={handleSubmit}>
+      <S.cont onSubmit={handleSubmit} isFocused={isFocused}>
+        <BiSearch />
         <S.input
           placeholder="Add new todo..."
           ref={ref}
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           disabled={isLoading}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
         />
-        {!isLoading ? (
-          <S.submit type="submit">
-            <Btn icon="plus" />
-          </S.submit>
-        ) : (
-          <Btn icon="spinner" />
-        )}
+        {search.isLoading && <Btn icon="spinner" />}
       </S.cont>
-      <InputDropBox inputText={inputText} onClick={handleClick} />
-      {/* <S.dropbox>
-        {isSearchLoading && <Btn icon="spinner" />}
-        {!isSearchLoading &&
-          searches.map((search, i) => (
-            <>
-              <S.dropboxElem>{search}</S.dropboxElem>
-              {i === searches.length - 1 && <div ref={searchRef}></div>}
-            </>
-          ))}
-        {isSearchFetching && <Btn icon="spinner" />}
-      </S.dropbox> */}
+      <InputDropBox
+        inputText={inputText}
+        onClick={handleClick}
+        search={search}
+      />
     </>
   );
 };
 
 const S = {
-  cont: styled.form`
-    width: 100%;
-    margin-bottom: 20px;
+  cont: styled.form<{ isFocused: boolean }>`
+    width: 364px;
+    margin-bottom: 0.5rem;
     display: flex;
-    border-radius: calc(0.5 * 100px);
-    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.38);
-    justify-content: space-evenly;
+    border-radius: 0.5rem;
+    border: ${(props) =>
+      props.isFocused ? "1px solid #9F9F9F" : "1px #dedede solid"};
+    align-items: center;
+    padding-left: 1rem;
+    &:hover {
+      box-shadow: 0px 0px 1px 1px #dedede;
+    }
   `,
   input: styled.input`
     font-size: 1rem;
