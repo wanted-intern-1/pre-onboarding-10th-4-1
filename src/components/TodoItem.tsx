@@ -1,6 +1,6 @@
 import { FaSpinner, FaTrash } from "react-icons/fa";
 import { TodoContext } from "../contexts/TodoContext";
-import { useState, useCallback, useContext, useEffect } from "react";
+import { useState, useCallback, useContext } from "react";
 
 type Props = {
   id: string;
