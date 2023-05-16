@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 
 const useFocus = () => {
   const ref = useRef<HTMLInputElement>(null);
@@ -6,7 +6,11 @@ const useFocus = () => {
     ref.current && ref.current.focus();
   };
 
-  return { ref, setFocus };
+  useLayoutEffect(() => {
+    setFocus();
+  }, []);
+
+  return { ref };
 };
 
 export default useFocus;

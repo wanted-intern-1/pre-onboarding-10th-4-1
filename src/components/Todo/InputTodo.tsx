@@ -1,5 +1,5 @@
+import { FormEvent, useCallback, useState } from "react";
 import { FaPlusCircle, FaSpinner } from "react-icons/fa";
-import { FormEvent, useCallback, useEffect, useState } from "react";
 
 import { TodoAPI } from "../../api";
 import { useFocus, useMutation } from "../../hooks";
@@ -11,11 +11,7 @@ type Props = {
 
 const InputTodo = ({ setTodos }: Props) => {
   const [inputText, setInputText] = useState("");
-  const { ref, setFocus } = useFocus();
-
-  useEffect(() => {
-    setFocus();
-  }, [setFocus]);
+  const { ref } = useFocus();
 
   const [createTodo, { isLoading }] = useMutation(TodoAPI.create, {
     onSuccess: (data: ITodo) => {
