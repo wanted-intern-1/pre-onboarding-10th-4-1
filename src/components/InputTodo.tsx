@@ -4,10 +4,17 @@ import Btn from "./common/Btn";
 import { TodoContext } from "../contexts/TodoContext";
 import { styled } from "styled-components";
 import useFocus from "../hooks/useFocus";
+import useSearch from "../hooks/useSearch";
 
 const InputTodo = () => {
   const { createTodo, isLoading } = useContext(TodoContext);
   const [inputText, setInputText] = useState("");
+  const {
+    searches,
+    ref: searchRef,
+    isLoading: isSearchLoading,
+    isFetching: isSearchFetching,
+  } = useSearch(inputText);
   const { ref, setFocus } = useFocus();
 
   useEffect(() => {
@@ -24,22 +31,35 @@ const InputTodo = () => {
   );
 
   return (
-    <S.cont onSubmit={handleSubmit}>
-      <S.input
-        placeholder="Add new todo..."
-        ref={ref}
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
-        disabled={isLoading}
-      />
-      {!isLoading ? (
-        <S.submit type="submit">
-          <Btn icon="plus" />
-        </S.submit>
-      ) : (
-        <Btn icon="spinner" />
-      )}
-    </S.cont>
+    <>
+      <S.cont onSubmit={handleSubmit}>
+        <S.input
+          placeholder="Add new todo..."
+          ref={ref}
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+          disabled={isLoading}
+        />
+        {!isLoading ? (
+          <S.submit type="submit">
+            <Btn icon="plus" />
+          </S.submit>
+        ) : (
+          <Btn icon="spinner" />
+        )}
+      </S.cont>
+      <S.dropbox>
+        {isSearchLoading && <Btn icon="spinner" />}
+        {!isSearchLoading &&
+          searches.map((search, i) => (
+            <>
+              <S.dropboxElem>{search}</S.dropboxElem>
+              {i === searches.length - 1 && <div ref={searchRef}></div>}
+            </>
+          ))}
+        {isSearchFetching && <Btn icon="spinner" />}
+      </S.dropbox>
+    </>
   );
 };
 
@@ -72,6 +92,16 @@ const S = {
     height: 45px;
     outline: none;
     border: none;
+  `,
+  dropbox: styled.div`
+    width: 100%;
+    position: absolute;
+    height: 10rem;
+    overflow: scroll;
+    background: white;
+  `,
+  dropboxElem: styled.div`
+    margin-bottom: 1rem;
   `,
 };
 
