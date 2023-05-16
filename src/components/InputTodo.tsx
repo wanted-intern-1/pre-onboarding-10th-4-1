@@ -1,20 +1,15 @@
 import { FormEvent, useCallback, useContext, useEffect, useState } from "react";
 
 import Btn from "./common/Btn";
+import InputDropBox from "./InputDropbox";
 import { TodoContext } from "../contexts/TodoContext";
 import { styled } from "styled-components";
 import useFocus from "../hooks/useFocus";
-import useSearch from "../hooks/useSearch";
 
 const InputTodo = () => {
   const { createTodo, isLoading } = useContext(TodoContext);
   const [inputText, setInputText] = useState("");
-  const {
-    searches,
-    ref: searchRef,
-    isLoading: isSearchLoading,
-    isFetching: isSearchFetching,
-  } = useSearch(inputText);
+
   const { ref, setFocus } = useFocus();
 
   useEffect(() => {
@@ -29,6 +24,11 @@ const InputTodo = () => {
     },
     [inputText]
   );
+
+  const handleClick = async (keyword: string) => {
+    await createTodo(keyword);
+    setInputText("");
+  };
 
   return (
     <>
@@ -48,7 +48,8 @@ const InputTodo = () => {
           <Btn icon="spinner" />
         )}
       </S.cont>
-      <S.dropbox>
+      <InputDropBox inputText={inputText} onClick={handleClick} />
+      {/* <S.dropbox>
         {isSearchLoading && <Btn icon="spinner" />}
         {!isSearchLoading &&
           searches.map((search, i) => (
@@ -58,7 +59,7 @@ const InputTodo = () => {
             </>
           ))}
         {isSearchFetching && <Btn icon="spinner" />}
-      </S.dropbox>
+      </S.dropbox> */}
     </>
   );
 };
@@ -92,16 +93,6 @@ const S = {
     height: 45px;
     outline: none;
     border: none;
-  `,
-  dropbox: styled.div`
-    width: 100%;
-    position: absolute;
-    height: 10rem;
-    overflow: scroll;
-    background: white;
-  `,
-  dropboxElem: styled.div`
-    margin-bottom: 1rem;
   `,
 };
 

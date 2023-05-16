@@ -2,21 +2,26 @@ import { useEffect, useState } from "react";
 
 import { searchApi } from "../api/search";
 import useDebounce from "./useDebounce";
-import { useIntersectionObserver } from "./useIntersectionObserver";
+import { useIntersect } from "./useIntersect";
 
 const useSearch = (keyword: string) => {
   const [page, setPage] = useState(1);
-  const [searches, setSearches] = useState<string[]>([]);
+  const [searches, setSearches] = useState<string[] | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(true);
-  const ref = useIntersectionObserver(() => {
-    if (!isLoading) {
-      setPage((prev) => prev + 1);
-    }
-  });
+  // const ref = useIntersect(() => {
+  //   if (!isLoading) {
+  //     setPage((prev) => prev + 1);
+  //   }
+  // });
+  const [ref, inView] = useIntersect();
 
   const debouncedKeyword = useDebounce(keyword, 500);
+
+  useEffect(() => {
+    if (!isLoading) setPage((prev) => prev + 1);
+  }, [inView]);
 
   useEffect(() => {
     load();
@@ -52,13 +57,16 @@ const useSearch = (keyword: string) => {
     const res = await searchApi.getSearch({ q: debouncedKeyword, page });
     page === 1
       ? setSearches((prev) => [...res.data.result])
-      : setSearches((prev) => [...prev, ...res.data.result]);
-    if (searches.length + res.data.result.length === res.data.result.total) {
+      : setSearches((prev) => prev && [...prev, ...res.data.result]);
+    if (
+      searches &&
+      searches.length + res.data.result.length === res.data.result.total
+    ) {
       setHasNextPage(false);
     }
   };
 
-  return { searches, ref, fetch, isLoading, isFetching };
+  return { searches, ref, inView, isLoading, isFetching };
 };
 
 export default useSearch;
