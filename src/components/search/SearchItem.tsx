@@ -1,37 +1,49 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { ITodo } from '../../types/common';
+import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import Highlighter from 'react-highlight-words';
 import { theme } from '../../styles/theme';
 import useHover from '../../hooks/useHover';
+import { useInputContext } from '../../contexts/InputProvider';
+import { useTodoListDispatchContext } from '../../contexts/TodoListProvider';
+import { ITodo } from '../../types/common';
 
 type Props = {
-  todo: ITodo;
-  inputText: string;
+  id: number;
+  listItem: string;
 };
 
-const SearchItem = ({ todo, inputText }: Props) => {
+const SearchItem = ({ id, listItem }: Props) => {
+  const { inputText, handleInputChange } = useInputContext();
   const [hoverRef, isHoverd] = useHover<HTMLLIElement>();
-  const [clickId, setClickId] = useState('');
+  const [clickId, setClickId] = useState(-1);
+  const { onCreateTodo } = useTodoListDispatchContext();
+
+  const handleTodoClick = async () => {
+    setClickId(id);
+
+    const newItem: Omit<ITodo, 'id'> = { title: listItem };
+    await onCreateTodo(newItem);
+    handleInputChange('');
+  };
 
   useEffect(() => {
-    setClickId('');
+    setClickId(-1);
   }, [isHoverd]);
 
   return (
-    <S.TodoLine ref={hoverRef} onClick={() => setClickId(todo.id)}>
+    <S.TodoLine ref={hoverRef} onClick={handleTodoClick}>
       <Highlighter
         highlightStyle={{
           color: theme.colors.green500,
           backgroundColor: 'transparent',
         }}
         searchWords={[inputText]}
-        textToHighlight={todo.title}
+        textToHighlight={listItem}
       >
-        {todo.title}
+        {listItem}
       </Highlighter>
-      {isHoverd && clickId !== todo.id ? <S.HoverNotice>hover</S.HoverNotice> : ''}
-      {clickId === todo.id ? <S.ClickNotice>click</S.ClickNotice> : ''}
+      {isHoverd && clickId !== id ? <S.HoverNotice>hover</S.HoverNotice> : ''}
+      {clickId === id ? <S.ClickNotice>click</S.ClickNotice> : ''}
     </S.TodoLine>
   );
 };
@@ -44,9 +56,19 @@ const S = {
       background-color: ${({ theme }) => theme.colors.neutral100};
       border-radius: 3px;
     }
+    &:active {
+      background-color: ${({ theme }) => theme.colors.green100};
+    }
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right: 10px;
+    }
   `,
   HoverNotice: styled.div`
     color: #3211ff;

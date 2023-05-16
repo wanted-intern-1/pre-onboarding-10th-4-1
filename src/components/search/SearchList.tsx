@@ -1,20 +1,14 @@
 import React from 'react';
 import { styled } from 'styled-components';
 import SearchItem from './SearchItem';
-import { useInputContext } from '../../contexts/InputProvider';
-import { useTodoListContext } from '../../contexts/TodoListProvider';
 
-const SearchList = () => {
-  const { inputText } = useInputContext();
-  const { todos } = useTodoListContext();
-
-  const filterKeywordTodos = todos.filter((todo) => todo.title.includes(inputText));
+const SearchList = ({ searchList = [] }) => {
   return (
     <S.Container>
-      {filterKeywordTodos && (
+      {searchList && (
         <ul>
-          {filterKeywordTodos.map((todo) => {
-            return <SearchItem key={todo.id} todo={todo} inputText={inputText} />;
+          {searchList.map((listItem, i) => {
+            return <SearchItem key={i} id={i} listItem={listItem} />;
           })}
         </ul>
       )}
@@ -38,6 +32,15 @@ const S = {
     top: 110%;
     background-color: #fff;
     z-index: 999;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      height: 30%;
+      background-color: ${({ theme }) => theme.colors.neutral600};
+      border-radius: 20px;
+    }
   `,
 };
 

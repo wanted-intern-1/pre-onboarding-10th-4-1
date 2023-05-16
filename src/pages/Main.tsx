@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import Header from '../components/common/Header';
 import { ITodo } from '../types/common';
@@ -10,13 +10,25 @@ import { styled } from 'styled-components';
 import { useInputContext } from '../contexts/InputProvider';
 import TodoListProvider from '../contexts/TodoListProvider';
 import useAsync from '../hooks/useAsync';
+import { getSearch } from '../api/search';
 
 const Main = () => {
+  const [searchList, setSearchList] = useState([]);
   const { inputText } = useInputContext();
   const { value, callback } = useAsync({
     fn: getTodoList,
     deps: [],
   });
+
+  useEffect(() => {
+    const getSearchList = async () => {
+      const { data } = await getSearch({ q: inputText, page: 1, limit: 10 });
+
+      setSearchList(data.result);
+    };
+
+    inputText.length ? getSearchList() : setSearchList([]);
+  }, [inputText]);
 
   useEffect(() => {
     callback();
@@ -41,7 +53,7 @@ const Main = () => {
         >
           <S.DropDownContainer>
             <InputTodo />
-            {inputText.length > 0 && <SearchList />}
+            {searchList.length > 0 && <SearchList searchList={searchList} />}
           </S.DropDownContainer>
           <TodoList />
         </TodoListProvider>
