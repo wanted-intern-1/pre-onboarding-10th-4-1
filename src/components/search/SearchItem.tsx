@@ -6,7 +6,7 @@ import { theme } from "../../styles/theme";
 import useHover from "../../hooks/useHover";
 
 type Props = {
-  todo: ITodo;
+  todo: string;
   inputText: string;
 };
 
@@ -19,23 +19,19 @@ const SearchItem = ({ todo, inputText }: Props) => {
   }, [isHoverd]);
 
   return (
-    <S.TodoLine ref={hoverRef} onClick={() => setClickId(todo.id)}>
+    <S.TodoLine ref={hoverRef} onClick={() => setClickId(todo)}>
       <Highlighter
         highlightStyle={{
           color: theme.colors.green500,
           backgroundColor: "transparent",
         }}
         searchWords={[inputText]}
-        textToHighlight={todo.title}
+        textToHighlight={todo}
       >
-        {todo.title}
+        {todo}
       </Highlighter>
-      {isHoverd && clickId !== todo.id ? (
-        <S.HoverNotice>hover</S.HoverNotice>
-      ) : (
-        ""
-      )}
-      {clickId === todo.id ? <S.ClickNotice>click</S.ClickNotice> : ""}
+      {isHoverd && clickId !== todo ? <S.HoverNotice>hover</S.HoverNotice> : ""}
+      {clickId === todo ? <S.ClickNotice>click</S.ClickNotice> : ""}
     </S.TodoLine>
   );
 };
