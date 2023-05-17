@@ -2,7 +2,7 @@ import { ITodo } from "../../types/common";
 import TodoItem from "./TodoItem";
 
 type Props = {
-  todos: ITodo[];
+  todos: ITodo[] | undefined;
   refetch: () => Promise<void>;
 };
 
@@ -17,4 +17,5 @@ const TodoList = ({ todos, refetch }: Props) => {
     <div className="empty-list">...</div>
   );
 };
+
 export default TodoList;

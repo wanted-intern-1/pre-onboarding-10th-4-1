@@ -14,16 +14,18 @@ const Main = () => {
   const fetchSearchResults = useCallback(() => {
     return SearchAPI.get(debouncedInputText);
   }, [debouncedInputText]);
-
-  const { data: searchResults, refetch: refetchSearch } = useQuery(
-    debouncedInputText ? fetchSearchResults : null
-  );
+  const {
+    data: searchResults,
+    refetch: refetchSearch,
+    hasNextPage,
+  } = useQuery(debouncedInputText ? fetchSearchResults : null);
 
   useEffect(() => {
     if (debouncedInputText) {
       refetchSearch();
     }
-  }, [debouncedInputText, refetchSearch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedInputText]);
 
   return (
     <S.Container>

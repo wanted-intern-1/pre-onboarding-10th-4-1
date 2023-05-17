@@ -3,7 +3,6 @@ import Highlighter from "react-highlight-words";
 import { styled } from "styled-components";
 import useHover from "../../hooks/useHover";
 import { theme } from "../../styles/theme";
-import { ITodo } from "../../types/common";
 
 type Props = {
   result: string;

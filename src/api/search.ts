@@ -1,14 +1,30 @@
+import { DataResult } from "../types/common";
 import apiRequest from "./client";
 
 const RESOURCE = "/search";
 
-const get = async (q: string, page = 1, limit = 10) => {
+interface SearchResponse {
+  opcode: number;
+  message: string;
+  result: string[];
+  total: number;
+  page: number;
+  limit: number;
+  qty: number;
+}
+
+const get = async (q: string, page = 1, limit = 10): Promise<DataResult> => {
   try {
     const response = await apiRequest.get(`${RESOURCE}`, {
       params: { q, page, limit },
     });
 
-    return response.data;
+    const responseData = response.data as SearchResponse;
+
+    return {
+      result: responseData.result,
+      total: responseData.total,
+    };
   } catch (error) {
     throw new Error("API get error");
   }
