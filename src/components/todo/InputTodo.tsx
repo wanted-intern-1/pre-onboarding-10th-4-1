@@ -44,7 +44,11 @@ const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
         }
         disabled={isLoading}
       />
-      {isLoading && <SpinnerSvg />}
+      {isLoading && (
+        <S.SpinnerWarper>
+          <SpinnerSvg />
+        </S.SpinnerWarper>
+      )}
     </S.FormWrap>
   );
 };
@@ -56,7 +60,7 @@ const S = {
         isClick ? theme.colors.neutral600 : theme.colors.neutral300};
     border-radius: 6px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     padding: 12px 13px;
     gap: 8px;
@@ -65,7 +69,7 @@ const S = {
     margin: 0 auto;
     margin-bottom: 10px;
     &:hover {
-      border: 3px solid
+      outline: 3px solid
         ${({ theme }: { theme: DefaultTheme }) => theme.colors.neutral300};
     }
     &:active {
@@ -74,7 +78,7 @@ const S = {
     }
   `,
   Input: styled.input`
-    width: 280px;
+    width: 260px;
     line-height: 20px;
     font-size: 1rem;
     padding-right: 5px;
@@ -89,6 +93,9 @@ const S = {
   SpinnerIcon: styled(SpinnerSvg)`
     display: flex;
     align-self: center;
+  `,
+  SpinnerWarper: styled.span`
+    margin-left: 1.2rem;
   `,
 };
 
