@@ -48,10 +48,13 @@ const SearchList = () => {
               return <SearchItem key={idx} todo={todo} />;
             })}
           </ul>
+
           {isLoading && todos.length >= limit ? (
-            <S.SpinnerLine>
-              <Spinner />
-            </S.SpinnerLine>
+            <S.SpinnerBox>
+              <S.SpinnerLine>
+                <Spinner />
+              </S.SpinnerLine>
+            </S.SpinnerBox>
           ) : (
             <S.MoreLine ref={targetRef}>
               <S.MoreIcon />
@@ -81,6 +84,10 @@ const S = {
     z-index: 999;
   `,
   SpinnerLine: styled.div`
+    width: 16px;
+    height: 16px;
+  `,
+  SpinnerBox: styled.div`
     display: flex;
     justify-content: center;
   `,
