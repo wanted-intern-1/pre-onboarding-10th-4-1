@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
+
 import { getSearch } from '../api/search';
 
 type ReturnType = [
@@ -15,42 +16,33 @@ export const useInfinityQuery = (keyword: string): ReturnType => {
   const [hasNextPage, setHasNextPage] = useState(true);
   const [page, setPage] = useState(1);
 
-  const checkHasNextPage = (len: number, total: number) => {
-    setHasNextPage(data.length + len <= total);
-  };
-
-  const fetchSearch = async () => {
+  const fetchSearch = async (page: number) => {
     setIsFetching(true);
     const response = await getSearch({ q: keyword, page });
 
-    const data = response.data.result ?? [];
-    setData((prev) => [...prev, ...data]);
+    setHasNextPage(
+      data.length + response.data.result.length !== response.data.total
+    );
+    setData((prev) => [...prev, ...response.data.result]);
     setIsFetching(false);
-    checkHasNextPage(response.data.result.length, response.data.total);
+    setPage(page + 1);
   };
 
-  const load = () => {
+  const load = async () => {
     if (!keyword) return setData([]);
 
-    setPage(1);
-    fetchSearch();
+    await fetchSearch(1);
   };
 
-  const loadMore = () => {
+  const loadMore = async () => {
     if (!hasNextPage) return;
 
-    setPage((prev) => prev + 1);
-    fetchSearch();
+    await fetchSearch(page);
   };
 
-  const fetchNextPage = () => {
-    if (hasNextPage) {
-      loadMore();
-    }
-  };
+  const fetchNextPage = loadMore;
 
   useEffect(() => {
-    setData([]);
     load();
   }, [keyword]);
 
