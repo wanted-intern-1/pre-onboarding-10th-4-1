@@ -14,6 +14,6 @@ export const getSearch = async (data: {
 
     return response;
   } catch (error) {
-    throw new Error("API getTodoList error");
+    throw new Error("API getSearch error");
   }
 };

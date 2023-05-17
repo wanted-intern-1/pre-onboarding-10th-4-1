@@ -43,7 +43,7 @@ const SearchList = ({ todos, inputText }: Props) => {
               <FaSpinner className="spinner" size={14} />
             </S.IconWrap>
           ) : (
-            <S.IconWrap>
+            <S.IconWrap ref={ref}>
               <FaEllipsisH size={14} />
             </S.IconWrap>
           )}
