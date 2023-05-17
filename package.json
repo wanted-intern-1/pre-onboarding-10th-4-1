@@ -17,7 +17,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "postinstall": "husky install && git config --global commit.template",
+    "build": "react-scripts build",
+    "postinstall": "husky install",
     "format": "prettier --cache --write . && git add .",
     "lint": "eslint --cache ."
   },
