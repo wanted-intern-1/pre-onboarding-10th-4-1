@@ -23,6 +23,8 @@ const SearchList = ({ onSubmit, inputText }: Props) => {
   const filterKeywordTodos =
     data && data.filter((todo) => todo.includes(inputText));
 
+  if (!inputText.length) return null;
+
   if (!data.length)
     return (
       <S.Container>
