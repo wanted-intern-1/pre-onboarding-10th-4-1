@@ -1,16 +1,42 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 import Header from "../components/common/Header";
 import { ITodo } from "../types/common";
 import InputTodo from "../components/todo/InputTodo";
 import TodoList from "../components/todo/TodoList";
-import { getTodoList } from "../api/todo";
+import { createTodo, getTodoList } from "../api/todo";
 import SearchList from "../components/search/SearchList";
 import { styled } from "styled-components";
 
 const Main = () => {
   const [todoListData, setTodoListData] = useState<ITodo[]>([]);
   const [inputText, setInputText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = (inputText: string) => async (e: FormEvent) => {
+    try {
+      e.preventDefault();
+      setIsLoading(true);
+
+      const trimmed = inputText.trim();
+      if (!trimmed) {
+        return alert("Please write something");
+      }
+
+      const newItem: Omit<ITodo, "id"> = { title: trimmed };
+      const { data } = await createTodo(newItem);
+
+      if (data) {
+        return setTodoListData((prev) => [...prev, data as ITodo]);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong.");
+    } finally {
+      setInputText("");
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -25,12 +51,13 @@ const Main = () => {
         <Header />
         <S.DropDownContainer>
           <InputTodo
+            isLoading={isLoading}
+            onSubmit={handleSubmit}
             inputText={inputText}
             setInputText={setInputText}
-            setTodos={setTodoListData}
           />
           {inputText.length > 0 && (
-            <SearchList inputText={inputText} todos={todoListData} />
+            <SearchList onSubmit={handleSubmit} inputText={inputText} />
           )}
         </S.DropDownContainer>
         <TodoList todos={todoListData} setTodos={setTodoListData} />
