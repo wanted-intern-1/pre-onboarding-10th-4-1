@@ -56,11 +56,12 @@ const S = {
     padding: 6px 12px;
     cursor: pointer;
     &:hover {
-      background-color: ${(props) =>
+      background-color: ${(props: { clickId: string }) =>
         !!props.clickId ? '' : theme.colors.neutral100};
       border-radius: 3px;
     }
-    background-color: ${(props) => (!!props.clickId ? '#D5F4F1' : '')};
+    background-color: ${(props: { clickId: string }) =>
+      !!props.clickId ? '#D5F4F1' : ''};
     display: flex;
     align-items: center;
     justify-content: space-between;
