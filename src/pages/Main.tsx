@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
 import Header from "../components/common/Header";
-import { ITodo } from "../types/common";
-import InputTodo from "../components/todo/InputTodo";
 import TodoList from "../components/todo/TodoList";
-import { getTodoList } from "../api/todo";
+import InputTodo from "../components/todo/InputTodo";
 import SearchList from "../components/search/SearchList";
+import { ITodo } from "../types/common";
+import { getTodoList } from "../api/todo";
 import { styled } from "styled-components";
 
 const Main = () => {
@@ -30,7 +30,11 @@ const Main = () => {
             setTodos={setTodoListData}
           />
           {inputText.length > 0 && (
-            <SearchList inputText={inputText} todos={todoListData} />
+            <SearchList
+              inputText={inputText}
+              setInputText={setInputText}
+              setTodos={setTodoListData}
+            />
           )}
         </S.DropDownContainer>
         <TodoList todos={todoListData} setTodos={setTodoListData} />

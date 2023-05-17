@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-function useHover<T extends HTMLElement = HTMLElement>(): [
+export function useHover<T extends HTMLElement = HTMLElement>(): [
   React.MutableRefObject<T | null>,
   boolean
 ] {
@@ -25,5 +25,3 @@ function useHover<T extends HTMLElement = HTMLElement>(): [
 
   return [ref, value];
 }
-
-export default useHover;
