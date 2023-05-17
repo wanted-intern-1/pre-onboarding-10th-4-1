@@ -1,28 +1,21 @@
-import React from "react";
 import { styled } from "styled-components";
 import SearchItem from "./SearchItem";
-import { ITodo } from "../../types/common";
 
 type Props = {
-  todos: ITodo[];
+  searchResults: any;
   inputText: string;
 };
 
-const SearchList = ({ todos, inputText }: Props) => {
-  const filterKeywordTodos = todos.filter((todo) =>
-    todo.title.includes(inputText)
-  );
+const SearchList = ({ searchResults, inputText }: Props) => {
   return (
     <S.Container>
-      {filterKeywordTodos && (
-        <ul>
-          {filterKeywordTodos.map((todo) => {
-            return (
-              <SearchItem key={todo.id} todo={todo} inputText={inputText} />
-            );
-          })}
-        </ul>
-      )}
+      <ul>
+        {searchResults?.result.map((result: string, index: number) => {
+          return (
+            <SearchItem key={index} result={result} inputText={inputText} />
+          );
+        })}
+      </ul>
     </S.Container>
   );
 };

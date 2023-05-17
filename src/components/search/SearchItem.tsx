@@ -6,11 +6,11 @@ import { theme } from "../../styles/theme";
 import { ITodo } from "../../types/common";
 
 type Props = {
-  todo: ITodo;
+  result: string;
   inputText: string;
 };
 
-const SearchItem = ({ todo, inputText }: Props) => {
+const SearchItem = ({ result, inputText }: Props) => {
   const [hoverRef, isHoverd] = useHover<HTMLLIElement>();
   const [clickId, setClickId] = useState("");
 
@@ -19,23 +19,23 @@ const SearchItem = ({ todo, inputText }: Props) => {
   }, [isHoverd]);
 
   return (
-    <S.TodoLine ref={hoverRef} onClick={() => setClickId(todo.id)}>
+    <S.TodoLine ref={hoverRef} onClick={() => setClickId(result)}>
       <Highlighter
         highlightStyle={{
           color: theme.colors.green500,
           backgroundColor: "transparent",
         }}
         searchWords={[inputText]}
-        textToHighlight={todo.title}
+        textToHighlight={result}
       >
-        {todo.title}
+        {result}
       </Highlighter>
-      {isHoverd && clickId !== todo.id ? (
+      {isHoverd && clickId !== result ? (
         <S.HoverNotice>hover</S.HoverNotice>
       ) : (
         ""
       )}
-      {clickId === todo.id ? <S.ClickNotice>click</S.ClickNotice> : ""}
+      {clickId === result ? <S.ClickNotice>click</S.ClickNotice> : ""}
     </S.TodoLine>
   );
 };

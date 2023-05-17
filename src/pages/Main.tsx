@@ -1,14 +1,29 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { styled } from "styled-components";
-import { TodoAPI } from "../api";
+import { SearchAPI, TodoAPI } from "../api";
 import { Header, InputTodo, TodoList } from "../components";
 import SearchList from "../components/search/SearchList";
-import { useQuery } from "../hooks";
+import { useDebounce, useQuery } from "../hooks";
 
 const Main = () => {
   const [inputText, setInputText] = useState("");
-  const { data: todos, refetch } = useQuery(TodoAPI.get);
+  const debouncedInputText = useDebounce(inputText, 500);
+  const { data: todos, refetch: refetchTodos } = useQuery(TodoAPI.get);
+
+  const fetchSearchResults = useCallback(() => {
+    return SearchAPI.get(debouncedInputText);
+  }, [debouncedInputText]);
+
+  const { data: searchResults, refetch: refetchSearch } = useQuery(
+    debouncedInputText ? fetchSearchResults : null
+  );
+
+  useEffect(() => {
+    if (debouncedInputText) {
+      refetchSearch();
+    }
+  }, [debouncedInputText, refetchSearch]);
 
   return (
     <S.Container>
@@ -18,13 +33,16 @@ const Main = () => {
           <InputTodo
             inputText={inputText}
             setInputText={setInputText}
-            refetch={refetch}
+            refetch={refetchTodos}
           />
-          {inputText.length > 0 && (
-            <SearchList inputText={inputText} todos={todos} />
+          {debouncedInputText.length > 0 && (
+            <SearchList
+              inputText={debouncedInputText}
+              searchResults={searchResults}
+            />
           )}
         </S.DropDownContainer>
-        <TodoList todos={todos} refetch={refetch} />
+        <TodoList todos={todos} refetch={refetchTodos} />
       </S.Wrap>
     </S.Container>
   );
