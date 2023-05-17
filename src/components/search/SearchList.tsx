@@ -1,27 +1,55 @@
-import React from "react";
-import { styled } from "styled-components";
 import SearchItem from "./SearchItem";
+import React, { useEffect, useState } from "react";
 import { ITodo } from "../../types/common";
+import { styled } from "styled-components";
+import { FaSpinner } from "react-icons/fa";
+import { getSearchList } from "../../api/search";
+import { useCreateTodo } from "../../hooks/useCreateTodo";
 
 type Props = {
-  todos: ITodo[];
+  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
+  setInputText: React.Dispatch<React.SetStateAction<string>>;
   inputText: string;
 };
 
-const SearchList = ({ todos, inputText }: Props) => {
-  const filterKeywordTodos = todos.filter((todo) =>
-    todo.title.includes(inputText)
-  );
+const SearchList = ({ setTodos, setInputText, inputText }: Props) => {
+  const [searchList, setSearchList] = useState([]);
+  const { isLoading, handleCreateTodo } = useCreateTodo();
+
+  useEffect(() => {
+    const getListByKeyword = async () => {
+      const { data } = await getSearchList(inputText);
+      setSearchList(data.result);
+    };
+
+    getListByKeyword();
+  }, [inputText]);
+
+  const handleClick = async (e: React.MouseEvent) => {
+    const target = e.currentTarget as HTMLElement;
+    await handleCreateTodo(target.innerText, setTodos);
+    setInputText("");
+  };
+
   return (
     <S.Container>
-      {filterKeywordTodos && (
-        <ul>
-          {filterKeywordTodos.map((todo) => {
-            return (
-              <SearchItem key={todo.id} todo={todo} inputText={inputText} />
-            );
-          })}
-        </ul>
+      {!isLoading ? (
+        searchList && (
+          <ul>
+            {searchList.map((searchItem, index) => {
+              return (
+                <SearchItem
+                  key={index}
+                  searchItem={searchItem}
+                  inputText={inputText}
+                  onClick={handleClick}
+                />
+              );
+            })}
+          </ul>
+        )
+      ) : (
+        <FaSpinner className="spinner" />
       )}
     </S.Container>
   );
