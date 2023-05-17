@@ -1,8 +1,8 @@
-import { FaSpinner, FaTrash } from "react-icons/fa";
-import { useCallback, useState } from "react";
+import { FaSpinner, FaTrash } from 'react-icons/fa';
+import { useCallback, useState } from 'react';
 
-import { ITodo } from "../../types/common";
-import { deleteTodo } from "../../api/todo";
+import { ITodo } from '../../types/common';
+import { deleteTodo } from '../../api/todo';
 
 type Props = {
   id: string;
@@ -21,7 +21,7 @@ const TodoItem = ({ id, title, setTodos }: Props) => {
       setTodos((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
       console.error(error);
-      alert("Something went wrong.");
+      alert('Something went wrong.');
     } finally {
       setIsLoading(false);
     }

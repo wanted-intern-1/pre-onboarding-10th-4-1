@@ -1,5 +1,5 @@
-import { ITodo } from "../../types/common";
-import TodoItem from "./TodoItem";
+import { ITodo } from '../../types/common';
+import TodoItem from './TodoItem';
 
 type Props = {
   todos: ITodo[];

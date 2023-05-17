@@ -1,9 +1,9 @@
 ---
 name: Refact
 about: Propose methods for refactoring code
-title: "[Refact]"
+title: '[Refact]'
 labels: refactoring
-assignees: ""
+assignees: ''
 ---
 
 ## 리팩토링 내용

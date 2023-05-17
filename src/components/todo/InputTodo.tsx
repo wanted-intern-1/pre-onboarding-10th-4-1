@@ -1,10 +1,11 @@
-import { FaSpinner, FaPlusCircle } from "react-icons/fa";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from 'react';
 
-import useFocus from "../../hooks/useFocus";
-import styled from "styled-components";
-import SearchSvg from "../../assets/SearchSvg";
-import SpinnberSvg from "../../assets/SpinnerSvg";
+import useFocus from '../../hooks/useFocus';
+import styled from 'styled-components';
+import SearchSvg from '../../assets/SearchSvg';
+import SpinnerSvg from '../../assets/SpinnerSvg';
+
+import type { DefaultTheme } from 'styled-components';
 
 type Props = {
   isLoading: boolean;
@@ -31,21 +32,19 @@ const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
       isClick={isClick}
       onSubmit={onSubmit(inputText)}
     >
-      <S.SearchIcon />
+      <button className="input-submit" type="submit">
+        <S.SearchIcon />
+      </button>
       <S.Input
         placeholder="Add new todo..."
         ref={ref}
         value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setInputText(e.target.value)
+        }
         disabled={isLoading}
       />
-      {!isLoading ? (
-        <button className="input-submit" type="submit">
-          <FaPlusCircle className="btn-plus" />
-        </button>
-      ) : (
-        <FaSpinner className="spinner" />
-      )}
+      {isLoading && <SpinnerSvg />}
     </S.FormWrap>
   );
 };
@@ -53,7 +52,7 @@ const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
 const S = {
   FormWrap: styled.form<{ isClick: boolean }>`
     border: 1px solid
-      ${({ theme, isClick }) =>
+      ${({ theme, isClick }: { theme: DefaultTheme; isClick: boolean }) =>
         isClick ? theme.colors.neutral600 : theme.colors.neutral300};
     border-radius: 6px;
     display: flex;
@@ -66,7 +65,12 @@ const S = {
     margin: 0 auto;
     margin-bottom: 10px;
     &:hover {
-      border: 3px solid ${({ theme }) => theme.colors.neutral300};
+      border: 3px solid
+        ${({ theme }: { theme: DefaultTheme }) => theme.colors.neutral300};
+    }
+    &:active {
+      border: 1px solid
+        ${({ theme }: { theme: DefaultTheme }) => theme.colors.neutral600};
     }
   `,
   Input: styled.input`
@@ -82,7 +86,7 @@ const S = {
       height: 14px;
     }
   `,
-  SpinnerIcon: styled(SpinnberSvg)`
+  SpinnerIcon: styled(SpinnerSvg)`
     display: flex;
     align-self: center;
   `,

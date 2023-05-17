@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 function useHover<T extends HTMLElement = HTMLElement>(): [
   React.MutableRefObject<T | null>,
@@ -13,15 +13,15 @@ function useHover<T extends HTMLElement = HTMLElement>(): [
   useEffect(() => {
     const node = ref.current;
     if (node) {
-      node.addEventListener("mouseover", handleMouseOver);
-      node.addEventListener("mouseout", handleMouseOut);
+      node.addEventListener('mouseover', handleMouseOver);
+      node.addEventListener('mouseout', handleMouseOut);
 
       return (): void => {
-        node.removeEventListener("mouseover", handleMouseOver);
-        node.removeEventListener("mouseout", handleMouseOut);
+        node.removeEventListener('mouseover', handleMouseOver);
+        node.removeEventListener('mouseout', handleMouseOut);
       };
     }
-  }, [ref.current, handleMouseOver, handleMouseOut]);
+  }, [handleMouseOver, handleMouseOut]);
 
   return [ref, value];
 }

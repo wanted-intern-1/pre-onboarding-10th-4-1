@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig } from 'axios';
 
 const baseURL = process.env.REACT_APP_API_URL;
 const token = process.env.REACT_APP_TOKEN;
@@ -10,7 +10,13 @@ const baseInstance = axios.create({
   },
 });
 
-baseInstance.interceptors.response.use(({ data }) => data);
+baseInstance.interceptors.response.use(
+  (res) => {
+    if (res.data.errors) return Promise.reject(new Error(res.data.errors));
+    return res.data;
+  },
+  (error) => Promise.reject(error)
+);
 
 const apiRequest = {
   get: (url: string, request?: AxiosRequestConfig<any> | undefined) =>

@@ -1,6 +1,6 @@
-import apiRequest from "./index";
+import apiRequest from './index';
 
-const RESOURCE = "/search";
+const RESOURCE = '/search';
 
 export const getSearch = async (data: {
   q: string;
@@ -14,6 +14,6 @@ export const getSearch = async (data: {
 
     return response;
   } catch (error) {
-    throw new Error("API getSearch error");
+    throw new Error('API getSearch error');
   }
 };
