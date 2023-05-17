@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import { FaSpinner, FaTrash } from "react-icons/fa";
 
-import { TodoAPI } from "../../api";
-import { useMutation } from "../../hooks";
 import { ITodo } from "../../types/common";
+import { useMutation } from "../../hooks";
+import { TodoAPI } from "../../api";
 
 type Props = {
   id: string;
