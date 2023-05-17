@@ -78,6 +78,16 @@ const S = {
     top: 110%;
     background-color: #fff;
     z-index: 999;
+    &::-webkit-scrollbar {
+      width: 12px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.48);
+      border-radius: 10px;
+      width: 4px;
+      height: 72px;
+      border: 3px solid rgba(256, 256, 256);
+    }
   `,
   IconWrap: styled.div<{ isVisible: boolean }>`
     padding: 6px 12px;
