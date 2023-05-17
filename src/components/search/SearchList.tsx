@@ -1,18 +1,17 @@
-import React, { useRef } from "react";
+import React, { FormEvent, useRef } from "react";
 import { styled } from "styled-components";
 import SearchItem from "./SearchItem";
-import { ITodo } from "../../types/common";
 import useDebounce from "../../hooks/useDebounce";
 import { useInfinityQuery } from "../../hooks/useInfinityQuery";
 import { FaSpinner, FaEllipsisH } from "react-icons/fa";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 type Props = {
-  todos: ITodo[];
+  onSubmit: (inputText: string) => (e: FormEvent) => Promise<void>;
   inputText: string;
 };
 
-const SearchList = ({ todos, inputText }: Props) => {
+const SearchList = ({ onSubmit, inputText }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const debouncedInputText = useDebounce(inputText);
   const [isFetching, data, fetchNextPage] =
@@ -36,7 +35,14 @@ const SearchList = ({ todos, inputText }: Props) => {
       {filterKeywordTodos && (
         <ul>
           {filterKeywordTodos.map((todo, idx) => {
-            return <SearchItem key={todo} todo={todo} inputText={inputText} />;
+            return (
+              <SearchItem
+                key={todo}
+                todo={todo}
+                inputText={inputText}
+                onSubmit={onSubmit(todo)}
+              />
+            );
           })}
           {isFetching ? (
             <S.IconWrap>

@@ -1,22 +1,19 @@
-import { CiSearch } from "react-icons/ci";
 import { FaSpinner, FaPlusCircle } from "react-icons/fa";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
-import { ITodo } from "../../types/common";
-import { createTodo } from "../../api/todo";
 import useFocus from "../../hooks/useFocus";
 import styled from "styled-components";
 import SearchSvg from "../../assets/SearchSvg";
 import SpinnberSvg from "../../assets/SpinnerSvg";
 
 type Props = {
-  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
+  isLoading: boolean;
+  onSubmit: (inputText: string) => (e: FormEvent) => Promise<void>;
   setInputText: React.Dispatch<React.SetStateAction<string>>;
   inputText: string;
 };
 
-const InputTodo = ({ setTodos, setInputText, inputText }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
+const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
   const { ref, setFocus } = useFocus();
   const [isClick, setIsClick] = useState(false);
 
@@ -24,40 +21,16 @@ const InputTodo = ({ setTodos, setInputText, inputText }: Props) => {
     setFocus();
   }, [setFocus]);
 
-  const handleSubmit = useCallback(
-    async (e: FormEvent) => {
-      try {
-        e.preventDefault();
-        setIsLoading(true);
-
-        const trimmed = inputText.trim();
-        if (!trimmed) {
-          return alert("Please write something");
-        }
-
-        const newItem: Omit<ITodo, "id"> = { title: trimmed };
-        const { data } = await createTodo(newItem);
-
-        if (data) {
-          return setTodos((prev) => [...prev, data as ITodo]);
-        }
-      } catch (error) {
-        console.error(error);
-        alert("Something went wrong.");
-      } finally {
-        setInputText("");
-        setIsLoading(false);
-      }
-    },
-    [inputText, setTodos]
-  );
-
   const onFormClick = () => {
     setIsClick((prev) => !prev);
   };
 
   return (
-    <S.FormWrap onClick={onFormClick} isClick={isClick} onSubmit={handleSubmit}>
+    <S.FormWrap
+      onClick={onFormClick}
+      isClick={isClick}
+      onSubmit={onSubmit(inputText)}
+    >
       <S.SearchIcon />
       <S.Input
         placeholder="Add new todo..."

@@ -1,5 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
-import { ITodo } from "../../types/common";
+import React, { FormEvent, useEffect, useState } from "react";
 import { styled } from "styled-components";
 import Highlighter from "react-highlight-words";
 import { theme } from "../../styles/theme";
@@ -8,18 +7,24 @@ import useHover from "../../hooks/useHover";
 type Props = {
   todo: string;
   inputText: string;
+  onSubmit: (e: FormEvent<Element>) => Promise<void>;
 };
 
-const SearchItem = ({ todo, inputText }: Props) => {
+const SearchItem = ({ onSubmit, todo, inputText }: Props) => {
   const [hoverRef, isHoverd] = useHover<HTMLLIElement>();
   const [clickId, setClickId] = useState("");
+
+  const hanldeClick = (e: FormEvent) => {
+    setClickId(todo);
+    onSubmit(e);
+  };
 
   useEffect(() => {
     setClickId("");
   }, [isHoverd]);
 
   return (
-    <S.TodoLine ref={hoverRef} onClick={() => setClickId(todo)}>
+    <S.TodoLine ref={hoverRef} onClick={hanldeClick}>
       <Highlighter
         highlightStyle={{
           color: theme.colors.green500,
