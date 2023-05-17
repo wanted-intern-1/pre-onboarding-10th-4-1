@@ -5,7 +5,8 @@ import { getSearch } from "../api/search";
 type ReturnType = [
   isFetching: boolean,
   data: string[],
-  fetchNextPage: () => void
+  fetchNextPage: () => void,
+  hasNextPage: boolean
 ];
 
 export const useInfinityQuery = (keyword: string): ReturnType => {
@@ -52,5 +53,5 @@ export const useInfinityQuery = (keyword: string): ReturnType => {
     load();
   }, [keyword]);
 
-  return [isFetching, data, fetchNextPage];
+  return [isFetching, data, fetchNextPage, hasNextPage];
 };
