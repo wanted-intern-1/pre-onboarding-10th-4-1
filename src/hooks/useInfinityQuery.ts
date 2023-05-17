@@ -5,25 +5,25 @@ import { getSearch } from "../api/search";
 type ReturnType = [
   isFetching: boolean,
   data: string[],
-  fetchNextPage: () => void,
-  hasNextPage: boolean
+  fetchNextPage: () => void
 ];
 
 export const useInfinityQuery = (keyword: string): ReturnType => {
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState<string[]>([]);
-  const [hasNextPage, setHasNextPage] = useState(false);
+  const [hasNextPage, setHasNextPage] = useState(true);
   const [page, setPage] = useState(1);
 
   const checkHasNextPage = (len: number, total: number) => {
-    setHasNextPage(data.length + len === total);
+    setHasNextPage(data.length + len <= total);
   };
 
   const fetchSearch = async () => {
     setIsFetching(true);
     const response = await getSearch({ q: keyword, page });
 
-    setData(response.data.result ?? []);
+    const data = response.data.result ?? [];
+    setData((prev) => [...prev, ...data]);
     setIsFetching(false);
     checkHasNextPage(response.data.result.length, response.data.total);
   };
@@ -36,7 +36,7 @@ export const useInfinityQuery = (keyword: string): ReturnType => {
   };
 
   const loadMore = () => {
-    if (!hasNextPage || page !== 1) return;
+    if (!hasNextPage) return;
 
     setPage((prev) => prev + 1);
     fetchSearch();
@@ -52,5 +52,5 @@ export const useInfinityQuery = (keyword: string): ReturnType => {
     load();
   }, [keyword]);
 
-  return [isFetching, data, fetchNextPage, hasNextPage];
+  return [isFetching, data, fetchNextPage];
 };

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useRef } from "react";
 import { styled } from "styled-components";
 import SearchItem from "./SearchItem";
 import { ITodo } from "../../types/common";
 import useDebounce from "../../hooks/useDebounce";
 import { useInfinityQuery } from "../../hooks/useInfinityQuery";
-import { FaSpinner } from "react-icons/fa";
+import { FaSpinner, FaEllipsisH } from "react-icons/fa";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 type Props = {
   todos: ITodo[];
@@ -12,9 +13,12 @@ type Props = {
 };
 
 const SearchList = ({ todos, inputText }: Props) => {
+  const ref = useRef<HTMLDivElement>(null);
   const debouncedInputText = useDebounce(inputText);
-  const [isFetching, data, fetchNextPage, hasNextPage] =
+  const [isFetching, data, fetchNextPage] =
     useInfinityQuery(debouncedInputText);
+
+  useIntersectionObserver(ref, { threshold: 0.5 }, fetchNextPage);
 
   const filterKeywordTodos =
     data && data.filter((todo) => todo.includes(inputText));
@@ -31,14 +35,18 @@ const SearchList = ({ todos, inputText }: Props) => {
     <S.Container>
       {filterKeywordTodos && (
         <ul>
-          {filterKeywordTodos.map((todo) => {
+          {filterKeywordTodos.map((todo, idx) => {
             return <SearchItem key={todo} todo={todo} inputText={inputText} />;
           })}
           {isFetching ? (
             <S.IconWrap>
               <FaSpinner className="spinner" size={14} />
             </S.IconWrap>
-          ) : null}
+          ) : (
+            <S.IconWrap>
+              <FaEllipsisH size={14} />
+            </S.IconWrap>
+          )}
         </ul>
       )}
     </S.Container>
