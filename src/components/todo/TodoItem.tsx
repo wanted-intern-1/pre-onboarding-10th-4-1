@@ -1,8 +1,5 @@
 import { FaSpinner, FaTrash } from 'react-icons/fa';
 import { useCallback, useState } from 'react';
-
-import { ITodo } from '../../types/common';
-import { deleteTodo } from '../../api/todo';
 import { useTodoListDispatchContext } from '../../contexts/TodoListProvider';
 
 type Props = {

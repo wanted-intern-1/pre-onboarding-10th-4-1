@@ -38,9 +38,9 @@ const SearchList = () => {
     debouncedValue !== '' ? getSearchList() : setSearchList([]);
   }, [debouncedValue, fetchData]);
 
-  const { setTarget, isLoading, isLastPage, state } = useInfiniteScroll({
+  const { target, isLoading, isLastPage, state } = useInfiniteScroll({
     fn: fetchData,
-    initData: searchList as any,
+    initData: searchList,
   });
 
   return (
@@ -52,7 +52,7 @@ const SearchList = () => {
               return <SearchItem key={i} id={i} listItem={listItem} />;
             })}
             {!isLastPage ? (
-              <li ref={setTarget}>{isLoading && <FaSpinner className="spinner" />}</li>
+              <li ref={target}>{isLoading && <FaSpinner className="spinner" />}</li>
             ) : (
               <li>
                 <FaEllipsisH />

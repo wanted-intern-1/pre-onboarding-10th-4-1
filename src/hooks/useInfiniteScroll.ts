@@ -3,42 +3,45 @@ import useIntersectionObserver from './useIntersectionObserver';
 
 type Props = {
   fn: Function;
-  initData: [];
+  initData: any[];
 };
 
-const useInfiniteScroll = ({ fn, initData = [] }: Props) => {
+const DEFAULT_PAGE_NUM = 2;
+
+const useInfiniteScroll = ({ fn, initData }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLastPage, setIsLastPage] = useState(false);
-  const [pageParam, setPageParam] = useState(2);
-  const [state, setState] = useState([] as string[]);
+  const [pageParam, setPageParam] = useState(DEFAULT_PAGE_NUM);
+  const [state, setState] = useState([] as any[]);
 
   useEffect(() => {
     setState([...initData]);
     setIsLastPage(false);
-    setPageParam(2);
-
-    console.log(initData);
+    setPageParam(DEFAULT_PAGE_NUM);
   }, [initData]);
 
-  const { setTarget } = useIntersectionObserver({
+  const { target } = useIntersectionObserver({
     root: null,
     rootMargin: '0px',
     threshold: 0.5,
     onIntersect: async ([{ isIntersecting }]) => {
       if (isIntersecting && !isLoading && !isLastPage) {
         setIsLoading(true);
+
         const { data } = await fn(pageParam);
 
-        setState([...state, ...data.result]);
+        if (data && data.result) {
+          setState([...state, ...data.result]);
 
-        if (data.result.length === 0) setIsLastPage(true);
-        else setPageParam((prev) => prev + 1);
+          data.result.length ? setPageParam((prev) => prev + 1) : setIsLastPage(true);
+        }
+
         setIsLoading(false);
       }
     },
   });
 
-  return { setTarget, isLoading, isLastPage, state };
+  return { target, isLoading, isLastPage, state };
 };
 
 export default useInfiniteScroll;

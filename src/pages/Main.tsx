@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import Header from '../components/common/Header';
 import { ITodo } from '../types/common';
@@ -7,20 +7,10 @@ import TodoList from '../components/todo/TodoList';
 import { createTodo, deleteTodo, getTodoList } from '../api/todo';
 import SearchList from '../components/search/SearchList';
 import { styled } from 'styled-components';
-import { useInputContext } from '../contexts/InputProvider';
 import TodoListProvider from '../contexts/TodoListProvider';
 import useAsync from '../hooks/useAsync';
-import { getSearch } from '../api/search';
-import { useDebounce } from '../hooks/useDebounce';
-
-const DEFAULT_SEARCH_PARAMS = {
-  PAGE_NUM: 1,
-  LIMIT: 10,
-};
 
 const Main = () => {
-  const [searchList, setSearchList] = useState([]);
-  const { inputText } = useInputContext();
   const { value, callback } = useAsync({
     fn: getTodoList,
     deps: [],
@@ -37,22 +27,6 @@ const Main = () => {
   const handleDeleteTodo = useCallback(async (id: string) => {
     return await deleteTodo(id);
   }, []);
-
-  const debouncedValue = useDebounce(inputText);
-
-  useEffect(() => {
-    const getSearchList = async () => {
-      const { data } = await getSearch({
-        q: debouncedValue,
-        page: DEFAULT_SEARCH_PARAMS.PAGE_NUM,
-        limit: DEFAULT_SEARCH_PARAMS.LIMIT,
-      });
-
-      setSearchList(data.result);
-    };
-
-    debouncedValue.length ? getSearchList() : setSearchList([]);
-  }, [debouncedValue]);
 
   return (
     <S.Container>

@@ -6,6 +6,12 @@ const ERROR_MESSAGE = {
   INPUT_DISPATCH_CONTEXT: 'Error: TodoDispatchContext',
 };
 
+const DISPATCH_CONDITION = {
+  INIT: 'INIT_TODO_LIST',
+  CREATE: 'CREATE_TODO',
+  DELETE: 'DELETE_TODO',
+};
+
 type TodoListState = {
   todos: ITodo[];
 };
@@ -33,18 +39,17 @@ export const useTodoListDispatchContext = () => {
 
 const reducer = (state = [], action: any) => {
   switch (action.type) {
-    case 'INIT_TODO_LIST': {
+    case DISPATCH_CONDITION.INIT: {
       return action.payload;
     }
-    case 'CREATE_TODO': {
+    case DISPATCH_CONDITION.CREATE: {
       return [...state, action.payload];
     }
-    case 'DELETE_TODO': {
+    case DISPATCH_CONDITION.DELETE: {
       const id = action.payload;
       return state.filter((todo: ITodo) => todo.id !== id);
     }
     default: {
-      console.log('wrong error');
       return state;
     }
   }
@@ -66,13 +71,13 @@ const TodoListProvider = ({
   const [todos, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    dispatch({ type: 'INIT_TODO_LIST', payload: initialState });
+    dispatch({ type: DISPATCH_CONDITION.INIT, payload: initialState });
   }, [initialState]);
 
   const onCreateTodo = useCallback(
     async (newTodo: Omit<ITodo, 'id'>) => {
       const { data } = await handleCreateTodo(newTodo);
-      dispatch({ type: 'CREATE_TODO', payload: data });
+      dispatch({ type: DISPATCH_CONDITION.CREATE, payload: data });
     },
     [handleCreateTodo]
   );
@@ -80,7 +85,7 @@ const TodoListProvider = ({
   const onDeleteTodo = useCallback(
     async (id: string) => {
       await handleDeleteTodo(id);
-      dispatch({ type: 'DELETE_TODO', payload: id });
+      dispatch({ type: DISPATCH_CONDITION.DELETE, payload: id });
     },
     [handleDeleteTodo]
   );
