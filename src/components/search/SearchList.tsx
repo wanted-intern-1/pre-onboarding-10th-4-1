@@ -3,8 +3,9 @@ import { styled } from 'styled-components';
 import SearchItem from './SearchItem';
 import useDebounce from '../../hooks/useDebounce';
 import { useInfinityQuery } from '../../hooks/useInfinityQuery';
-import { FaSpinner } from 'react-icons/fa';
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
+import SpinnerSvg from '../../assets/SpinnerSvg';
+import type { DefaultTheme } from 'styled-components';
 
 type Props = {
   onSubmit: (inputText: string) => (e: FormEvent) => Promise<void>;
@@ -50,7 +51,7 @@ const SearchList = ({ onSubmit, inputText }: Props) => {
             );
           })}
           <S.IconWrap isVisible={isFetching}>
-            <FaSpinner className="spinner" size={14} />
+            <SpinnerSvg />
           </S.IconWrap>
         </ul>
       )}
@@ -59,8 +60,9 @@ const SearchList = ({ onSubmit, inputText }: Props) => {
 };
 
 const S = {
-  Container: styled.div`
-    border: 1px solid ${({ theme }) => theme.colors.neutral300};
+  Container: styled.div<DefaultTheme>`
+    border: 1px solid
+      ${({ theme }: { theme: DefaultTheme }) => theme.colors.neutral300};
     width: 364px;
     height: 164px;
     max-height: 164px;
@@ -77,7 +79,8 @@ const S = {
   `,
   IconWrap: styled.div<{ isVisible: boolean }>`
     padding: 6px 12px;
-    display: ${(props) => (props.isVisible ? 'flex' : 'none')};
+    display: ${(props: { isVisible: boolean }) =>
+      props.isVisible ? 'flex' : 'none'};
     flex-direction: column;
     align-items: center;
   `,

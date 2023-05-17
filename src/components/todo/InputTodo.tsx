@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import SearchSvg from '../../assets/SearchSvg';
 import SpinnerSvg from '../../assets/SpinnerSvg';
 
+import type { DefaultTheme } from 'styled-components';
+
 type Props = {
   isLoading: boolean;
   onSubmit: (inputText: string) => (e: FormEvent) => Promise<void>;
@@ -50,7 +52,7 @@ const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
 const S = {
   FormWrap: styled.form<{ isClick: boolean }>`
     border: 1px solid
-      ${({ theme, isClick }) =>
+      ${({ theme, isClick }: { theme: DefaultTheme; isClick: boolean }) =>
         isClick ? theme.colors.neutral600 : theme.colors.neutral300};
     border-radius: 6px;
     display: flex;
@@ -63,7 +65,12 @@ const S = {
     margin: 0 auto;
     margin-bottom: 10px;
     &:hover {
-      border: 3px solid ${({ theme }) => theme.colors.neutral300};
+      border: 3px solid
+        ${({ theme }: { theme: DefaultTheme }) => theme.colors.neutral300};
+    }
+    &:active {
+      border: 1px solid
+        ${({ theme }: { theme: DefaultTheme }) => theme.colors.neutral600};
     }
   `,
   Input: styled.input`

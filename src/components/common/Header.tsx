@@ -14,7 +14,7 @@ const Header = () => {
 
   return (
     <header style={headerStyle}>
-      <h1 style={titleStyle}>Todos</h1>
+      <h1 style={titleStyle}>Toodos</h1>
     </header>
   );
 };

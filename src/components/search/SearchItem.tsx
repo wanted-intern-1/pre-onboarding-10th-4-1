@@ -41,12 +41,6 @@ const SearchItem = ({ onSubmit, todo, inputText }: Props) => {
       >
         {todo}
       </Highlighter>
-      {isHovered && clickId !== todo ? (
-        <S.HoverNotice>hover</S.HoverNotice>
-      ) : (
-        ''
-      )}
-      {clickId === todo ? <S.ClickNotice>click</S.ClickNotice> : ''}
     </S.TodoLine>
   );
 };
