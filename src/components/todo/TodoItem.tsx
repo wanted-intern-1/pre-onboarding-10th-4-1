@@ -1,21 +1,18 @@
 import { useCallback } from "react";
 import { FaSpinner, FaTrash } from "react-icons/fa";
 
-import { ITodo } from "../../types/common";
-import { useMutation } from "../../hooks";
 import { TodoAPI } from "../../api";
+import { useMutation } from "../../hooks";
 
 type Props = {
   id: string;
   title: string;
-  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
+  refetch: () => Promise<void>;
 };
 
-const TodoItem = ({ id, title, setTodos }: Props) => {
+const TodoItem = ({ id, title, refetch }: Props) => {
   const [removeTodo, { isLoading }] = useMutation(TodoAPI.remove, {
-    onSuccess: () => {
-      setTodos((prev) => prev.filter((item) => item.id !== id));
-    },
+    onSuccess: () => refetch(),
     onError: (error) => {
       console.error(error);
       alert("Something went wrong.");

@@ -1,27 +1,26 @@
-import { CiSearch } from "react-icons/ci";
-import { FaSpinner, FaPlusCircle } from "react-icons/fa";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
+import { FaPlusCircle, FaSpinner } from "react-icons/fa";
 
-import { ITodo } from "../../types/common";
 import styled from "styled-components";
+import { TodoAPI } from "../../api";
 import SearchSvg from "../../assets/SearchSvg";
 import SpinnberSvg from "../../assets/SpinnerSvg";
 import { useFocus, useMutation } from "../../hooks";
-import { TodoAPI } from "../../api";
+import { ITodo } from "../../types/common";
 
 type Props = {
-  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
+  refetch: () => Promise<void>;
   setInputText: React.Dispatch<React.SetStateAction<string>>;
   inputText: string;
 };
 
-const InputTodo = ({ setTodos, setInputText, inputText }: Props) => {
+const InputTodo = ({ refetch, setInputText, inputText }: Props) => {
   const { ref } = useFocus();
   const [isClick, setIsClick] = useState(false);
 
   const [createTodo, { isLoading }] = useMutation(TodoAPI.create, {
-    onSuccess: (data: ITodo) => {
-      setTodos((prev) => [...prev, data]);
+    onSuccess: () => {
+      refetch();
       setInputText("");
     },
     onError: (error) => {

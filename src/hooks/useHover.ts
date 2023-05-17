@@ -21,7 +21,7 @@ function useHover<T extends HTMLElement = HTMLElement>(): [
         node.removeEventListener("mouseout", handleMouseOut);
       };
     }
-  }, [ref.current, handleMouseOver, handleMouseOut]);
+  }, [handleMouseOver, handleMouseOut]);
 
   return [ref, value];
 }

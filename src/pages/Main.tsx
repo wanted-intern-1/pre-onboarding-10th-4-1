@@ -1,21 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { ITodo } from "../types/common";
+import { styled } from "styled-components";
 import { TodoAPI } from "../api";
 import { Header, InputTodo, TodoList } from "../components";
 import SearchList from "../components/search/SearchList";
-import { styled } from "styled-components";
+import { useQuery } from "../hooks";
 
 const Main = () => {
-  const [todoListData, setTodoListData] = useState<ITodo[]>([]);
   const [inputText, setInputText] = useState("");
-
-  useEffect(() => {
-    (async () => {
-      const { data } = await TodoAPI.get();
-      setTodoListData(data || []);
-    })();
-  }, []);
+  const { data: todos, refetch } = useQuery(TodoAPI.get);
 
   return (
     <S.Container>
@@ -25,13 +18,13 @@ const Main = () => {
           <InputTodo
             inputText={inputText}
             setInputText={setInputText}
-            setTodos={setTodoListData}
+            refetch={refetch}
           />
           {inputText.length > 0 && (
-            <SearchList inputText={inputText} todos={todoListData} />
+            <SearchList inputText={inputText} todos={todos} />
           )}
         </S.DropDownContainer>
-        <TodoList todos={todoListData} setTodos={setTodoListData} />
+        <TodoList todos={todos} refetch={refetch} />
       </S.Wrap>
     </S.Container>
   );

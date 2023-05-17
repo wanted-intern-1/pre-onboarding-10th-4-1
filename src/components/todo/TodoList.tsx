@@ -3,14 +3,14 @@ import TodoItem from "./TodoItem";
 
 type Props = {
   todos: ITodo[];
-  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
+  refetch: () => Promise<void>;
 };
 
-const TodoList = ({ todos, setTodos }: Props) => {
-  return todos.length ? (
+const TodoList = ({ todos, refetch }: Props) => {
+  return todos?.length ? (
     <ul>
       {todos.map(({ id, title }) => (
-        <TodoItem key={id} id={id} title={title} setTodos={setTodos} />
+        <TodoItem key={id} id={id} title={title} refetch={refetch} />
       ))}
     </ul>
   ) : (

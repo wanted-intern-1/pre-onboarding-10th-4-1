@@ -7,7 +7,7 @@ const get = async () => {
   try {
     const response = await apiRequest.get(`${RESOURCE}`);
 
-    return response;
+    return response.data;
   } catch (error) {
     throw new Error("API get error");
   }
