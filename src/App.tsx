@@ -1,8 +1,8 @@
-import { ThemeProvider } from "styled-components";
-import "./App.css";
+import { ThemeProvider } from 'styled-components';
+import './App.css';
 
-import Main from "./pages/Main";
-import { theme } from "./styles/theme";
+import Main from './pages/Main';
+import { theme } from './styles/theme';
 
 const App = () => {
   return (

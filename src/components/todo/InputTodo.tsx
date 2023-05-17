@@ -1,10 +1,10 @@
-import { FaSpinner, FaPlusCircle } from "react-icons/fa";
-import { FormEvent, useEffect, useState } from "react";
+import { FaSpinner, FaPlusCircle } from 'react-icons/fa';
+import { FormEvent, useEffect, useState } from 'react';
 
-import useFocus from "../../hooks/useFocus";
-import styled from "styled-components";
-import SearchSvg from "../../assets/SearchSvg";
-import SpinnberSvg from "../../assets/SpinnerSvg";
+import useFocus from '../../hooks/useFocus';
+import styled from 'styled-components';
+import SearchSvg from '../../assets/SearchSvg';
+import SpinnerSvg from '../../assets/SpinnerSvg';
 
 type Props = {
   isLoading: boolean;
@@ -31,7 +31,9 @@ const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
       isClick={isClick}
       onSubmit={onSubmit(inputText)}
     >
-      <S.SearchIcon />
+      <button className="input-submit" type="submit">
+        <S.SearchIcon />
+      </button>
       <S.Input
         placeholder="Add new todo..."
         ref={ref}
@@ -41,13 +43,7 @@ const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
         }
         disabled={isLoading}
       />
-      {!isLoading ? (
-        <button className="input-submit" type="submit">
-          <FaPlusCircle className="btn-plus" />
-        </button>
-      ) : (
-        <FaSpinner className="spinner" />
-      )}
+      {isLoading && <SpinnerSvg />}
     </S.FormWrap>
   );
 };
@@ -84,7 +80,7 @@ const S = {
       height: 14px;
     }
   `,
-  SpinnerIcon: styled(SpinnberSvg)`
+  SpinnerIcon: styled(SpinnerSvg)`
     display: flex;
     align-self: center;
   `,

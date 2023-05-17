@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
-import { getSearch } from "../api/search";
+import { useEffect, useState } from 'react';
+import { getSearch } from '../api/search';
 
 type ReturnType = [
   isFetching: boolean,

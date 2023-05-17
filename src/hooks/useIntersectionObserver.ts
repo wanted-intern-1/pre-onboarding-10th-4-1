@@ -1,5 +1,5 @@
-import { RefObject, useEffect } from "react";
-import { useThrottle } from "./useThrottle";
+import { RefObject, useEffect } from 'react';
+import { useThrottle } from './useThrottle';
 
 export const useIntersectionObserver = (
   ref: RefObject<Element>,

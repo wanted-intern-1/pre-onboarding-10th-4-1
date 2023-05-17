@@ -1,10 +1,10 @@
-import React, { FormEvent, useRef } from "react";
-import { styled } from "styled-components";
-import SearchItem from "./SearchItem";
-import useDebounce from "../../hooks/useDebounce";
-import { useInfinityQuery } from "../../hooks/useInfinityQuery";
-import { FaSpinner } from "react-icons/fa";
-import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
+import React, { FormEvent, useRef } from 'react';
+import { styled } from 'styled-components';
+import SearchItem from './SearchItem';
+import useDebounce from '../../hooks/useDebounce';
+import { useInfinityQuery } from '../../hooks/useInfinityQuery';
+import { FaSpinner } from 'react-icons/fa';
+import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
 
 type Props = {
   onSubmit: (inputText: string) => (e: FormEvent) => Promise<void>;
@@ -77,7 +77,7 @@ const S = {
   `,
   IconWrap: styled.div<{ isVisible: boolean }>`
     padding: 6px 12px;
-    display: ${(props) => (props.isVisible ? "flex" : "none")};
+    display: ${(props) => (props.isVisible ? 'flex' : 'none')};
     flex-direction: column;
     align-items: center;
   `,

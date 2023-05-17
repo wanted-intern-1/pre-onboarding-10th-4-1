@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig } from 'axios';
 
 const baseURL = process.env.REACT_APP_API_URL;
 const token = process.env.REACT_APP_TOKEN;
