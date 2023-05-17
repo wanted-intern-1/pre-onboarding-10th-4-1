@@ -1,4 +1,3 @@
-import { FaSpinner, FaPlusCircle } from 'react-icons/fa';
 import { FormEvent, useEffect, useState } from 'react';
 
 import useFocus from '../../hooks/useFocus';
