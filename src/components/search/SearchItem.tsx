@@ -57,11 +57,11 @@ const S = {
     cursor: pointer;
     &:hover {
       background-color: ${(props: { clickId: string }) =>
-        !!props.clickId ? '' : theme.colors.neutral100};
+        props.clickId !== '' ? '' : theme.colors.neutral100};
       border-radius: 3px;
     }
     background-color: ${(props: { clickId: string }) =>
-      !!props.clickId ? '#D5F4F1' : ''};
+      props.clickId !== '' ? '#D5F4F1' : ''};
     display: flex;
     align-items: center;
     justify-content: space-between;
