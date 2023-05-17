@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useState } from 'react';
 
 import type { DefaultTheme } from 'styled-components';
 import SearchSvg from '../../assets/SearchSvg';
-import SpinnerSvg from '../../assets/SpinnerSvg';
+import Spinner from '../common/Spinner';
 import styled from 'styled-components';
 import useFocus from '../../hooks/useFocus';
 
@@ -31,21 +31,21 @@ const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
       isClick={isClick}
       onSubmit={onSubmit(inputText)}
     >
-      <button className="input-submit" type="submit">
-        <S.SearchIcon />
-      </button>
-      <S.Input
-        placeholder="Add new todo..."
-        ref={ref}
-        value={inputText}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setInputText(e.target.value)
-        }
-        disabled={isLoading}
-      />
-      <S.SpinnerIcon isLoading={isLoading}>
-        <SpinnerSvg />
-      </S.SpinnerIcon>
+      <S.InputCont>
+        <S.SearchIconCont type="submit">
+          <S.SearchIcon />
+        </S.SearchIconCont>
+        <S.Input
+          placeholder="Add new todo..."
+          ref={ref}
+          value={inputText}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setInputText(e.target.value)
+          }
+          disabled={isLoading}
+        />
+      </S.InputCont>
+      <Spinner isLoading={isLoading} />
     </S.FormWrap>
   );
 };
@@ -57,7 +57,7 @@ const S = {
         isClick ? theme.colors.neutral600 : theme.colors.neutral300};
     border-radius: 6px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: 12px 13px;
     gap: 8px;
@@ -66,7 +66,7 @@ const S = {
     margin: 0 auto;
     margin-bottom: 10px;
     &:hover {
-      border: 3px solid
+      outline: 3px solid
         ${({ theme }: { theme: DefaultTheme }) => theme.colors.neutral300};
     }
     &:active {
@@ -74,12 +74,16 @@ const S = {
         ${({ theme }: { theme: DefaultTheme }) => theme.colors.neutral600};
     }
   `,
+  InputCont: styled.div`
+    display: flex;
+  `,
   Input: styled.input`
-    width: 280px;
+    width: 260px;
     line-height: 20px;
     font-size: 1rem;
     padding-right: 5px;
     padding-left: 10px;
+    background: none;
   `,
   SearchIcon: styled(SearchSvg)`
     &:path {
@@ -87,10 +91,14 @@ const S = {
       height: 14px;
     }
   `,
-  SpinnerIcon: styled.div<{ isLoading: boolean }>`
+  SearchIconCont: styled.button`
+    background: transparent;
+    cursor: pointer;
     display: flex;
-    align-self: center;
-    visibility: ${(props) => (props.isLoading ? 'visible' : 'hidden')};
+    align-items: center;
+    height: 45px;
+    outline: none;
+    border: none;
   `,
 };
 

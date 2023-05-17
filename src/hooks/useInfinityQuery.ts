@@ -50,6 +50,7 @@ export const useInfinityQuery = (keyword: string): ReturnType => {
   };
 
   useEffect(() => {
+    setData([]);
     load();
   }, [keyword]);
 
