@@ -1,58 +1,55 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
+
 import { getSearch } from '../api/search';
 
-type ReturnType = [
-  isFetching: boolean,
-  data: string[],
-  fetchNextPage: () => void,
-  hasNextPage: boolean
-];
+type ReturnType = {
+  isLoading: boolean;
+  isFetching: boolean;
+  data: string[];
+  fetchNextPage: () => Promise<void>;
+  hasNextPage: boolean;
+};
 
 export const useInfinityQuery = (keyword: string): ReturnType => {
+  const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState<string[]>([]);
   const [hasNextPage, setHasNextPage] = useState(true);
   const [page, setPage] = useState(1);
 
-  const checkHasNextPage = (len: number, total: number) => {
-    setHasNextPage(data.length + len <= total);
-  };
-
-  const fetchSearch = async () => {
-    setIsFetching(true);
+  const fetchSearch = async (page: number) => {
     const response = await getSearch({ q: keyword, page });
 
-    const data = response.data.result ?? [];
-    setData((prev) => [...prev, ...data]);
-    setIsFetching(false);
-    checkHasNextPage(response.data.result.length, response.data.total);
+    setHasNextPage(
+      data.length + response.data.result.length !== response.data.total
+    );
+    setData((prev) => [...prev, ...response.data.result]);
+    setPage(page + 1);
   };
 
-  const load = () => {
-    if (!keyword) return setData([]);
+  const load = async () => {
+    setData([]);
+    if (!keyword) return;
 
-    setPage(1);
-    fetchSearch();
+    setIsLoading(true);
+    await fetchSearch(1);
+    setIsLoading(false);
   };
 
-  const loadMore = () => {
+  const loadMore = async () => {
     if (!hasNextPage) return;
 
-    setPage((prev) => prev + 1);
-    fetchSearch();
+    setIsFetching(true);
+    await fetchSearch(page);
+    setIsFetching(false);
   };
 
-  const fetchNextPage = () => {
-    if (hasNextPage) {
-      loadMore();
-    }
-  };
+  const fetchNextPage = loadMore;
 
   useEffect(() => {
-    setData([]);
     load();
   }, [keyword]);
 
-  return [isFetching, data, fetchNextPage, hasNextPage];
+  return { isLoading, isFetching, data, fetchNextPage, hasNextPage };
 };

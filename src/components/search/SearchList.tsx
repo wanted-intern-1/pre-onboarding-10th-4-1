@@ -1,4 +1,5 @@
-import { FormEvent, useRef } from 'react';
+import { FormEvent, useEffect, useRef } from 'react';
+
 
 import type { DefaultTheme } from 'styled-components';
 import SearchItem from './SearchItem';
@@ -11,17 +12,21 @@ import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
 type Props = {
   onSubmit: (inputText: string) => (e: FormEvent) => Promise<void>;
   inputText: string;
+  setIsSearchLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const SearchList = ({ onSubmit, inputText }: Props) => {
+const SearchList = ({ onSubmit, inputText, setIsSearchLoading }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const debouncedInputText = useDebounce(inputText);
-  const [isFetching, data, fetchNextPage, hasNextPage] =
+  const { isLoading, isFetching, data, fetchNextPage, hasNextPage } =
     useInfinityQuery(debouncedInputText);
 
+  useEffect(() => {
+    setIsSearchLoading(isLoading);
+  }, [isLoading]);
   useIntersectionObserver(ref, { threshold: 0.5 }, fetchNextPage);
+  if (inputText.length <= 0 || isLoading) return <></>;
 
-  if (inputText.length <= 0) return <></>;
   if (!data.length)
     return (
       <S.Container>
@@ -37,13 +42,13 @@ const SearchList = ({ onSubmit, inputText }: Props) => {
         {data.map((todo, idx) => {
           return (
             <>
-              {idx === data.length - 3 && hasNextPage ? (
+              {idx === data.length - 3 && hasNextPage && !isFetching ? (
                 <div ref={ref} />
               ) : null}
               <SearchItem
                 key={todo}
                 todo={todo}
-                inputText={inputText}
+                inputText={debouncedInputText}
                 onSubmit={onSubmit(todo)}
               />
             </>
@@ -74,16 +79,6 @@ const S = {
     top: 110%;
     background-color: #fff;
     z-index: 999;
-    &::-webkit-scrollbar {
-      width: 12px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.48);
-      border-radius: 10px; /* 스크롤바 둥근 테두리 */
-      width: 4px;
-      height: 72px;
-      border: 3px solid rgba(256, 256, 256);
-    }
   `,
   IconWrap: styled.div<{ isVisible: boolean }>`
     padding: 6px 12px;

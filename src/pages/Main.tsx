@@ -12,6 +12,7 @@ const Main = () => {
   const [todoListData, setTodoListData] = useState<ITodo[]>([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
 
   const handleSubmit = (inputText: string) => async (e: FormEvent) => {
     try {
@@ -52,11 +53,16 @@ const Main = () => {
         <S.DropDownContainer>
           <InputTodo
             isLoading={isLoading}
+            isSearchLoading={isSearchLoading}
             onSubmit={handleSubmit}
             inputText={inputText}
             setInputText={setInputText}
           />
-          <SearchList onSubmit={handleSubmit} inputText={inputText} />
+          <SearchList
+            onSubmit={handleSubmit}
+            inputText={inputText}
+            setIsSearchLoading={setIsSearchLoading}
+          />
         </S.DropDownContainer>
         <TodoList todos={todoListData} setTodos={setTodoListData} />
       </S.Wrap>

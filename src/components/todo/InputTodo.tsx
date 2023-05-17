@@ -11,9 +11,16 @@ type Props = {
   onSubmit: (inputText: string) => (e: FormEvent) => Promise<void>;
   setInputText: React.Dispatch<React.SetStateAction<string>>;
   inputText: string;
+  isSearchLoading: boolean;
 };
 
-const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
+const InputTodo = ({
+  isLoading,
+  onSubmit,
+  setInputText,
+  inputText,
+  isSearchLoading,
+}: Props) => {
   const { ref, setFocus } = useFocus();
   const [isClick, setIsClick] = useState(false);
 
@@ -31,21 +38,22 @@ const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
       isClick={isClick}
       onSubmit={onSubmit(inputText)}
     >
-      <S.InputCont>
-        <S.SearchIconCont type="submit">
-          <S.SearchIcon />
-        </S.SearchIconCont>
-        <S.Input
-          placeholder="Add new todo..."
-          ref={ref}
-          value={inputText}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setInputText(e.target.value)
-          }
-          disabled={isLoading}
-        />
-      </S.InputCont>
-      <Spinner isLoading={isLoading} />
+      <button className="input-submit" type="submit">
+        <S.SearchIcon />
+      </button>
+      <S.Input
+        placeholder="Add new todo..."
+        ref={ref}
+        value={inputText}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setInputText(e.target.value)
+        }
+        disabled={isLoading}
+      />
+      {(isLoading || isSearchLoading) && (
+       <Spinner isLoading={isLoading} />
+      )}
+
     </S.FormWrap>
   );
 };
