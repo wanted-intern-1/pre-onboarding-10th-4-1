@@ -1,12 +1,13 @@
 import { FaSpinner, FaPlusCircle } from "react-icons/fa";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 
-import { ITodo } from "../../types/common";
-import { createTodo } from "../../api/todo";
-import useFocus from "../../hooks/useFocus";
 import styled from "styled-components";
+import useFocus from "../../hooks/useFocus";
 import SearchSvg from "../../assets/SearchSvg";
 import SpinnberSvg from "../../assets/SpinnerSvg";
+import { ITodo } from "../../types/common";
+import { createTodo } from "../../api/todo";
+import { debounce } from "../../utils/debounce";
 
 type Props = {
   setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
@@ -61,8 +62,8 @@ const InputTodo = ({ setTodos, setInputText, inputText }: Props) => {
       <S.Input
         placeholder="Add new todo..."
         ref={ref}
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
+        defaultValue={inputText}
+        onChange={debounce((e) => setInputText(e.target.value))}
         disabled={isLoading}
       />
       {!isLoading ? (
