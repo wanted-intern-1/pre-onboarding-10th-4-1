@@ -1,20 +1,26 @@
 import { FormEvent, useEffect, useState } from 'react';
 
-import useFocus from '../../hooks/useFocus';
-import styled from 'styled-components';
+import type { DefaultTheme } from 'styled-components';
 import SearchSvg from '../../assets/SearchSvg';
 import SpinnerSvg from '../../assets/SpinnerSvg';
-
-import type { DefaultTheme } from 'styled-components';
+import styled from 'styled-components';
+import useFocus from '../../hooks/useFocus';
 
 type Props = {
   isLoading: boolean;
   onSubmit: (inputText: string) => (e: FormEvent) => Promise<void>;
   setInputText: React.Dispatch<React.SetStateAction<string>>;
   inputText: string;
+  isSearchLoading: boolean;
 };
 
-const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
+const InputTodo = ({
+  isLoading,
+  onSubmit,
+  setInputText,
+  inputText,
+  isSearchLoading,
+}: Props) => {
   const { ref, setFocus } = useFocus();
   const [isClick, setIsClick] = useState(false);
 
@@ -44,7 +50,7 @@ const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
         }
         disabled={isLoading}
       />
-      {isLoading && (
+      {(isLoading || isSearchLoading) && (
         <S.SpinnerWarper>
           <SpinnerSvg />
         </S.SpinnerWarper>

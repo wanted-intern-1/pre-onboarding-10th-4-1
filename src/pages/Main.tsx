@@ -1,17 +1,18 @@
 import { FormEvent, useEffect, useState } from 'react';
+import { createTodo, getTodoList } from '../api/todo';
 
 import Header from '../components/common/Header';
 import { ITodo } from '../types/common';
 import InputTodo from '../components/todo/InputTodo';
-import TodoList from '../components/todo/TodoList';
-import { createTodo, getTodoList } from '../api/todo';
 import SearchList from '../components/search/SearchList';
+import TodoList from '../components/todo/TodoList';
 import { styled } from 'styled-components';
 
 const Main = () => {
   const [todoListData, setTodoListData] = useState<ITodo[]>([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
 
   const handleSubmit = (inputText: string) => async (e: FormEvent) => {
     try {
@@ -52,11 +53,16 @@ const Main = () => {
         <S.DropDownContainer>
           <InputTodo
             isLoading={isLoading}
+            isSearchLoading={isSearchLoading}
             onSubmit={handleSubmit}
             inputText={inputText}
             setInputText={setInputText}
           />
-          <SearchList onSubmit={handleSubmit} inputText={inputText} />
+          <SearchList
+            onSubmit={handleSubmit}
+            inputText={inputText}
+            setIsSearchLoading={setIsSearchLoading}
+          />
         </S.DropDownContainer>
         <TodoList todos={todoListData} setTodos={setTodoListData} />
       </S.Wrap>

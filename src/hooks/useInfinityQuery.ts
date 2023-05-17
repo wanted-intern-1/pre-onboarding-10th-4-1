@@ -6,7 +6,7 @@ import { getSearch } from '../api/search';
 type ReturnType = [
   isFetching: boolean,
   data: string[],
-  fetchNextPage: () => void,
+  fetchNextPage: () => Promise<void>,
   hasNextPage: boolean
 ];
 
@@ -29,7 +29,8 @@ export const useInfinityQuery = (keyword: string): ReturnType => {
   };
 
   const load = async () => {
-    if (!keyword) return setData([]);
+    setData([]);
+    if (!keyword) return;
 
     await fetchSearch(1);
   };

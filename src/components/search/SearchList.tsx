@@ -1,4 +1,4 @@
-import { FormEvent, useRef } from 'react';
+import { FormEvent, useEffect, useRef } from 'react';
 
 import type { DefaultTheme } from 'styled-components';
 import SearchItem from './SearchItem';
@@ -11,17 +11,22 @@ import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
 type Props = {
   onSubmit: (inputText: string) => (e: FormEvent) => Promise<void>;
   inputText: string;
+  setIsSearchLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const SearchList = ({ onSubmit, inputText }: Props) => {
+const SearchList = ({ onSubmit, inputText, setIsSearchLoading }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const debouncedInputText = useDebounce(inputText);
   const [isFetching, data, fetchNextPage, hasNextPage] =
     useInfinityQuery(debouncedInputText);
 
+  useEffect(() => {
+    setIsSearchLoading(isFetching);
+  }, [isFetching]);
+
   useIntersectionObserver(ref, { threshold: 0.5 }, fetchNextPage);
 
-  if (inputText.length <= 0) return <></>;
+  if (inputText.length <= 0 || isFetching) return <></>;
   if (!data.length)
     return (
       <S.Container>
@@ -43,7 +48,7 @@ const SearchList = ({ onSubmit, inputText }: Props) => {
               <SearchItem
                 key={todo}
                 todo={todo}
-                inputText={inputText}
+                inputText={debouncedInputText}
                 onSubmit={onSubmit(todo)}
               />
             </>
