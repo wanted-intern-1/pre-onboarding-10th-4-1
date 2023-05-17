@@ -69,6 +69,7 @@ const S = {
     color: orangered;
     font-size: 16px;
     background: none;
+    cursor: pointer;
   `,
 };
 

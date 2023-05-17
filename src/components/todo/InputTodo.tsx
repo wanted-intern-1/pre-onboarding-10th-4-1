@@ -38,9 +38,9 @@ const InputTodo = ({
       isClick={isClick}
       onSubmit={onSubmit(inputText)}
     >
-      <button className="input-submit" type="submit">
+      <S.SearchIconCont type="submit">
         <S.SearchIcon />
-      </button>
+      </S.SearchIconCont>
       <S.Input
         placeholder="Add new todo..."
         ref={ref}
@@ -51,9 +51,8 @@ const InputTodo = ({
         disabled={isLoading}
       />
       {(isLoading || isSearchLoading) && (
-       <Spinner isLoading={isLoading} />
+        <Spinner isLoading={isSearchLoading || isLoading} />
       )}
-
     </S.FormWrap>
   );
 };
@@ -65,7 +64,7 @@ const S = {
         isClick ? theme.colors.neutral600 : theme.colors.neutral300};
     border-radius: 6px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     padding: 12px 13px;
     gap: 8px;

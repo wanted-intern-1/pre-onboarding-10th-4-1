@@ -1,6 +1,5 @@
 import { FormEvent, useEffect, useRef } from 'react';
 
-
 import type { DefaultTheme } from 'styled-components';
 import SearchItem from './SearchItem';
 import SpinnerSvg from '../../assets/SpinnerSvg';
