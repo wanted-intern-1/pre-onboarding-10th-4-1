@@ -13,7 +13,7 @@ const SearchItem = ({ onSubmit, todo, inputText }: Props) => {
   const highlight = (text: string, inputText: string) => {
     const parts = text.split(new RegExp(`(${inputText})`, 'gi'));
     return (
-      <span>
+      <S.TodoLineCont>
         {Children.toArray(
           parts.map((part) =>
             part.toLowerCase() === inputText.toLowerCase() ? (
@@ -23,7 +23,7 @@ const SearchItem = ({ onSubmit, todo, inputText }: Props) => {
             )
           )
         )}
-      </span>
+      </S.TodoLineCont>
     );
   };
 
@@ -47,6 +47,11 @@ const S = {
     display: flex;
     align-items: center;
     justify-content: space-between;
+  `,
+  TodoLineCont: styled.span`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   `,
   Highlight: styled.span`
     color: ${theme.colors.green500};
