@@ -56,9 +56,7 @@ const Main = () => {
             inputText={inputText}
             setInputText={setInputText}
           />
-          {inputText.length > 0 && (
-            <SearchList onSubmit={handleSubmit} inputText={inputText} />
-          )}
+          <SearchList onSubmit={handleSubmit} inputText={inputText} />
         </S.DropDownContainer>
         <TodoList todos={todoListData} setTodos={setTodoListData} />
       </S.Wrap>
