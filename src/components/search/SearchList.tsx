@@ -17,16 +17,16 @@ type Props = {
 const SearchList = ({ onSubmit, inputText, setIsSearchLoading }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const debouncedInputText = useDebounce(inputText);
-  const [isFetching, data, fetchNextPage, hasNextPage] =
+  const { isLoading, isFetching, data, fetchNextPage, hasNextPage } =
     useInfinityQuery(debouncedInputText);
 
   useEffect(() => {
-    setIsSearchLoading(isFetching);
-  }, [isFetching]);
+    setIsSearchLoading(isLoading);
+  }, [isLoading]);
 
   useIntersectionObserver(ref, { threshold: 0.5 }, fetchNextPage);
 
-  if (inputText.length <= 0 || isFetching) return <></>;
+  if (inputText.length <= 0 || isLoading) return <></>;
   if (!data.length)
     return (
       <S.Container>
