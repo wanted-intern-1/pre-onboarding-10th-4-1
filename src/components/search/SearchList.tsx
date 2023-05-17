@@ -1,11 +1,12 @@
-import React, { FormEvent, useRef } from 'react';
-import { styled } from 'styled-components';
+import { FormEvent, useRef } from 'react';
+
+import type { DefaultTheme } from 'styled-components';
 import SearchItem from './SearchItem';
+import SpinnerSvg from '../../assets/SpinnerSvg';
+import { styled } from 'styled-components';
 import useDebounce from '../../hooks/useDebounce';
 import { useInfinityQuery } from '../../hooks/useInfinityQuery';
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
-import SpinnerSvg from '../../assets/SpinnerSvg';
-import type { DefaultTheme } from 'styled-components';
 
 type Props = {
   onSubmit: (inputText: string) => (e: FormEvent) => Promise<void>;
@@ -20,11 +21,7 @@ const SearchList = ({ onSubmit, inputText }: Props) => {
 
   useIntersectionObserver(ref, { threshold: 0.5 }, fetchNextPage);
 
-  const filterKeywordTodos =
-    data && data.filter((todo) => todo.includes(inputText));
-
-  if (!inputText.length) return null;
-
+  if (inputText.length <= 0) return <></>;
   if (!data.length)
     return (
       <S.Container>
@@ -33,30 +30,29 @@ const SearchList = ({ onSubmit, inputText }: Props) => {
         </ul>
       </S.Container>
     );
+
   return (
     <S.Container>
-      {filterKeywordTodos && (
-        <ul>
-          {filterKeywordTodos.map((todo, idx) => {
-            return (
-              <>
-                {idx === filterKeywordTodos.length - 3 && hasNextPage ? (
-                  <div ref={ref} />
-                ) : null}
-                <SearchItem
-                  key={idx}
-                  todo={todo}
-                  inputText={inputText}
-                  onSubmit={onSubmit(todo)}
-                />
-              </>
-            );
-          })}
-          <S.IconWrap isVisible={isFetching}>
-            <SpinnerSvg />
-          </S.IconWrap>
-        </ul>
-      )}
+      <ul>
+        {data.map((todo, idx) => {
+          return (
+            <>
+              {idx === data.length - 3 && hasNextPage ? (
+                <div ref={ref} />
+              ) : null}
+              <SearchItem
+                key={todo}
+                todo={todo}
+                inputText={inputText}
+                onSubmit={onSubmit(todo)}
+              />
+            </>
+          );
+        })}
+        <S.IconWrap isVisible={isFetching}>
+          <SpinnerSvg />
+        </S.IconWrap>
+      </ul>
     </S.Container>
   );
 };

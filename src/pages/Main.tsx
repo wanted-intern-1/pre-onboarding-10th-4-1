@@ -1,11 +1,11 @@
 import { FormEvent, useEffect, useState } from 'react';
+import { createTodo, getTodoList } from '../api/todo';
 
 import Header from '../components/common/Header';
 import { ITodo } from '../types/common';
 import InputTodo from '../components/todo/InputTodo';
-import TodoList from '../components/todo/TodoList';
-import { createTodo, getTodoList } from '../api/todo';
 import SearchList from '../components/search/SearchList';
+import TodoList from '../components/todo/TodoList';
 import { styled } from 'styled-components';
 
 const Main = () => {

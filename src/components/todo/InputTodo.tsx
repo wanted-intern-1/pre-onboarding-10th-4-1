@@ -1,11 +1,10 @@
 import { FormEvent, useEffect, useState } from 'react';
 
-import useFocus from '../../hooks/useFocus';
-import styled from 'styled-components';
-import SearchSvg from '../../assets/SearchSvg';
-import SpinnerSvg from '../../assets/SpinnerSvg';
-
 import type { DefaultTheme } from 'styled-components';
+import SearchSvg from '../../assets/SearchSvg';
+import Spinner from '../common/Spinner';
+import styled from 'styled-components';
+import useFocus from '../../hooks/useFocus';
 
 type Props = {
   isLoading: boolean;
@@ -32,23 +31,21 @@ const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
       isClick={isClick}
       onSubmit={onSubmit(inputText)}
     >
-      <button className="input-submit" type="submit">
-        <S.SearchIcon />
-      </button>
-      <S.Input
-        placeholder="Add new todo..."
-        ref={ref}
-        value={inputText}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setInputText(e.target.value)
-        }
-        disabled={isLoading}
-      />
-      {isLoading && (
-        <S.SpinnerWarper>
-          <SpinnerSvg />
-        </S.SpinnerWarper>
-      )}
+      <S.InputCont>
+        <S.SearchIconCont type="submit">
+          <S.SearchIcon />
+        </S.SearchIconCont>
+        <S.Input
+          placeholder="Add new todo..."
+          ref={ref}
+          value={inputText}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setInputText(e.target.value)
+          }
+          disabled={isLoading}
+        />
+      </S.InputCont>
+      <Spinner isLoading={isLoading} />
     </S.FormWrap>
   );
 };
@@ -60,7 +57,7 @@ const S = {
         isClick ? theme.colors.neutral600 : theme.colors.neutral300};
     border-radius: 6px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     padding: 12px 13px;
     gap: 8px;
@@ -77,12 +74,16 @@ const S = {
         ${({ theme }: { theme: DefaultTheme }) => theme.colors.neutral600};
     }
   `,
+  InputCont: styled.div`
+    display: flex;
+  `,
   Input: styled.input`
     width: 260px;
     line-height: 20px;
     font-size: 1rem;
     padding-right: 5px;
     padding-left: 10px;
+    background: none;
   `,
   SearchIcon: styled(SearchSvg)`
     &:path {
@@ -90,12 +91,14 @@ const S = {
       height: 14px;
     }
   `,
-  SpinnerIcon: styled(SpinnerSvg)`
+  SearchIconCont: styled.button`
+    background: transparent;
+    cursor: pointer;
     display: flex;
-    align-self: center;
-  `,
-  SpinnerWarper: styled.span`
-    margin-left: 1.2rem;
+    align-items: center;
+    height: 45px;
+    outline: none;
+    border: none;
   `,
 };
 
