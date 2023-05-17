@@ -11,20 +11,20 @@ type Props = {
 };
 
 const SearchItem = ({ onSubmit, todo, inputText }: Props) => {
-  const [hoverRef, isHoverd] = useHover<HTMLLIElement>();
+  const [hoverRef, isHovered] = useHover<HTMLLIElement>();
   const [clickId, setClickId] = useState("");
 
-  const hanldeClick = (e: FormEvent) => {
+  const handleClick = (e: FormEvent) => {
     setClickId(todo);
     onSubmit(e);
   };
 
   useEffect(() => {
     setClickId("");
-  }, [isHoverd]);
+  }, [isHovered]);
 
   return (
-    <S.TodoLine ref={hoverRef} onClick={hanldeClick}>
+    <S.TodoLine ref={hoverRef} onClick={handleClick}>
       <Highlighter
         highlightStyle={{
           color: theme.colors.green500,
@@ -35,7 +35,11 @@ const SearchItem = ({ onSubmit, todo, inputText }: Props) => {
       >
         {todo}
       </Highlighter>
-      {isHoverd && clickId !== todo ? <S.HoverNotice>hover</S.HoverNotice> : ""}
+      {isHovered && clickId !== todo ? (
+        <S.HoverNotice>hover</S.HoverNotice>
+      ) : (
+        ""
+      )}
       {clickId === todo ? <S.ClickNotice>click</S.ClickNotice> : ""}
     </S.TodoLine>
   );

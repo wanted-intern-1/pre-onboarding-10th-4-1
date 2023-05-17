@@ -36,7 +36,9 @@ const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
         placeholder="Add new todo..."
         ref={ref}
         value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setInputText(e.target.value)
+        }
         disabled={isLoading}
       />
       {!isLoading ? (
