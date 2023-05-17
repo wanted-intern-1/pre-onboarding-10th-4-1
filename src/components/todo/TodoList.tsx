@@ -1,5 +1,6 @@
 import { ITodo } from '../../types/common';
 import TodoItem from './TodoItem';
+import { styled } from 'styled-components';
 
 type Props = {
   todos: ITodo[];
@@ -14,7 +15,20 @@ const TodoList = ({ todos, setTodos }: Props) => {
       ))}
     </ul>
   ) : (
-    <div className="empty-list">...</div>
+    <S.Empty>...</S.Empty>
   );
 };
+
+const S = {
+  Empty: styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    font-size: 2.5rem;
+    letter-spacing: 1.5rem;
+    margin-left: 0.75rem;
+    color: #ececec;
+  `,
+};
+
 export default TodoList;
