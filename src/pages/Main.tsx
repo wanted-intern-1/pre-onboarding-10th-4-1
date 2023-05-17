@@ -11,15 +11,8 @@ import useOutsideClick from "../hooks/useOutsideClick";
 import { TodoActionContex } from "../context/TodoActionContext";
 
 const Main = () => {
-  const [todoListData, setTodoListData] = useState<ITodo[]>([]);
   const { setOutSideClick, outSideClick } = useContext(TodoActionContex);
   const searchRef = useRef(null);
-  useEffect(() => {
-    (async () => {
-      const { data } = await getTodoList();
-      setTodoListData(data || []);
-    })();
-  }, []);
 
   useOutsideClick(searchRef, () => setOutSideClick(true));
 
