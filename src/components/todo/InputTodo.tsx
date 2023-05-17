@@ -1,11 +1,10 @@
 import { FormEvent, useEffect, useState } from 'react';
 
-import useFocus from '../../hooks/useFocus';
-import styled from 'styled-components';
+import type { DefaultTheme } from 'styled-components';
 import SearchSvg from '../../assets/SearchSvg';
 import SpinnerSvg from '../../assets/SpinnerSvg';
-
-import type { DefaultTheme } from 'styled-components';
+import styled from 'styled-components';
+import useFocus from '../../hooks/useFocus';
 
 type Props = {
   isLoading: boolean;
@@ -44,7 +43,9 @@ const InputTodo = ({ isLoading, onSubmit, setInputText, inputText }: Props) => {
         }
         disabled={isLoading}
       />
-      {isLoading && <SpinnerSvg />}
+      <S.SpinnerIcon isLoading={isLoading}>
+        <SpinnerSvg />
+      </S.SpinnerIcon>
     </S.FormWrap>
   );
 };
@@ -86,9 +87,10 @@ const S = {
       height: 14px;
     }
   `,
-  SpinnerIcon: styled(SpinnerSvg)`
+  SpinnerIcon: styled.div<{ isLoading: boolean }>`
     display: flex;
     align-self: center;
+    visibility: ${(props) => (props.isLoading ? 'visible' : 'hidden')};
   `,
 };
 

@@ -7,6 +7,7 @@ declare module 'styled-components' {
       neutral300: '#DEDEDE';
       neutral600: '#9F9F9F';
       neutral700: '#7D7D7D';
+      green100: '#D5F4F1';
       green500: '#2BC9BA';
     };
   }
@@ -18,6 +19,7 @@ export const theme: DefaultTheme = {
     neutral300: '#DEDEDE',
     neutral600: '#9F9F9F',
     neutral700: '#7D7D7D',
+    green100: '#D5F4F1',
     green500: '#2BC9BA',
   },
 };
