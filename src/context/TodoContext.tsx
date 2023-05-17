@@ -7,14 +7,12 @@ interface ITodoContext {
   todos: ITodo[];
   createTodoItem: (inputText: string) => Promise<void>;
   deleteTodoItem: (id: string) => Promise<void>;
-  isLoading: boolean;
 }
 
 export const TodoContext = createContext<ITodoContext>({
   todos: [],
   createTodoItem: async () => {},
   deleteTodoItem: async () => {},
-  isLoading: false,
 });
 
 type Props = {
@@ -67,9 +65,7 @@ const TodoProvider = ({ children }: Props) => {
   };
 
   return (
-    <TodoContext.Provider
-      value={{ todos, createTodoItem, deleteTodoItem, isLoading }}
-    >
+    <TodoContext.Provider value={{ todos, createTodoItem, deleteTodoItem }}>
       {children}
     </TodoContext.Provider>
   );
