@@ -1,5 +1,5 @@
 import { FaPlusCircle } from "react-icons/fa";
-import { useContext, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState, useCallback } from "react";
 
 import useFocus from "../../hooks/useFocus";
 import styled, { keyframes } from "styled-components";
@@ -8,16 +8,17 @@ import { TodoInputContext } from "../../context/TodoInputContext";
 import { TodoActionContex } from "../../context/TodoActionContext";
 import useDebounce from "../../hooks/useDebounce";
 import Spinner from "../common/Spinner";
+import { TodoContext } from "../../context/TodoContext";
 
 const InputTodo = () => {
   const { ref, setFocus } = useFocus();
 
-  const { outSideClick, setOutSideClick } = useContext(TodoActionContex);
-  const { setInputText } = useContext(TodoInputContext);
+  const { outSideClick, setOutSideClick, isLoading, setIsLoading } =
+    useContext(TodoActionContex);
+  const { setInputText, inputText } = useContext(TodoInputContext);
   const [debounceValue, setDebounceValue] = useState("");
 
-  const { isLoading } = useContext(TodoActionContex);
-
+  const { createTodoItem } = useContext(TodoContext);
   useEffect(() => {
     setFocus();
   }, [setFocus]);
@@ -28,8 +29,29 @@ const InputTodo = () => {
     setOutSideClick(false);
   };
 
+  const handleSubmit = useCallback(
+    async (e: FormEvent) => {
+      try {
+        setIsLoading(true);
+        e.preventDefault();
+        await createTodoItem(inputText);
+        setDebounceValue("");
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+        setDebounceValue("");
+      }
+    },
+    [inputText, createTodoItem]
+  );
+
   return (
-    <S.FormWrap onClick={onFormClick} isClick={outSideClick}>
+    <S.FormWrap
+      onSubmit={handleSubmit}
+      onClick={onFormClick}
+      isClick={outSideClick}
+    >
       <S.SearchIcon />
       <S.Input
         placeholder="Add new todo..."
@@ -39,21 +61,17 @@ const InputTodo = () => {
         disabled={isLoading}
       />
       {isLoading ? (
-        <Spinner />
+        <S.SpinnerLine>
+          <Spinner />
+        </S.SpinnerLine>
       ) : (
-        <button className="input-submit" type="submit">
-          <FaPlusCircle className="btn-plus" />
-        </button>
+        <S.SubmiBtn type="submit">
+          <FaPlusCircle />
+        </S.SubmiBtn>
       )}
     </S.FormWrap>
   );
 };
-
-const rotate = keyframes`
-  100% {
-      transform: rotate(360deg);
-  }
-`;
 
 const S = {
   FormWrap: styled.form<{ isClick: boolean }>`
@@ -86,6 +104,20 @@ const S = {
       width: 14px;
       height: 14px;
     }
+  `,
+  SubmiBtn: styled.button`
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: darkcyan;
+    font-size: 16px;
+  `,
+  SpinnerLine: styled.div`
+    display: flex;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
   `,
 };
 

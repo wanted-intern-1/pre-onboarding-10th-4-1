@@ -40,29 +40,31 @@ const SearchList = () => {
   useIntersectionObeserver(targetRef, { threshold: 1.0 }, incresePage);
 
   return (
-    <S.Container isShow={todos.length > 0}>
-      {todos && (
-        <ul>
-          {todos.map((todo, idx) => {
-            return <SearchItem key={idx} todo={todo} />;
-          })}
-        </ul>
+    <>
+      {todos.length > 0 && (
+        <S.Container>
+          <ul>
+            {todos.map((todo, idx) => {
+              return <SearchItem key={idx} todo={todo} />;
+            })}
+          </ul>
+          {isLoading && todos.length >= limit ? (
+            <S.SpinnerLine>
+              <Spinner />
+            </S.SpinnerLine>
+          ) : (
+            <S.MoreLine ref={targetRef}>
+              <S.MoreIcon />
+            </S.MoreLine>
+          )}
+        </S.Container>
       )}
-      {isLoading && todos.length >= limit ? (
-        <S.SpinnerLine>
-          <Spinner />
-        </S.SpinnerLine>
-      ) : (
-        <S.MoreLine ref={targetRef}>
-          <S.MoreIcon />
-        </S.MoreLine>
-      )}
-    </S.Container>
+    </>
   );
 };
 
 const S = {
-  Container: styled.div<{ isShow: boolean }>`
+  Container: styled.div`
     border: 1px solid ${({ theme }) => theme.colors.neutral300};
     width: 364px;
     height: 164px;
@@ -77,7 +79,6 @@ const S = {
     top: 110%;
     background-color: #fff;
     z-index: 999;
-    display: ${({ isShow }) => (isShow ? "block" : "none")};
   `,
   SpinnerLine: styled.div`
     display: flex;

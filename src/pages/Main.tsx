@@ -31,7 +31,7 @@ const Main = () => {
           <InputTodo />
           {!outSideClick && <SearchList />}
         </S.DropDownContainer>
-        <TodoList todos={todoListData} setTodos={setTodoListData} />
+        <TodoList />
       </S.Wrap>
     </S.Container>
   );

@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useState } from "react";
+import React, { ReactNode, createContext, useState, useEffect } from "react";
 
 interface ITodoInput {
   inputText: string;
@@ -16,6 +16,7 @@ export const TodoInputContext = createContext<ITodoInput>({
 
 export const TodoInputProvider = ({ children }: Props) => {
   const [inputText, setInputText] = useState("");
+
   return (
     <TodoInputContext.Provider value={{ inputText, setInputText }}>
       {children}

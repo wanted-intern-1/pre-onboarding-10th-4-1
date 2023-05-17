@@ -3,6 +3,8 @@ import { styled } from "styled-components";
 import Highlighter from "react-highlight-words";
 import { theme } from "../../styles/theme";
 import { TodoInputContext } from "../../context/TodoInputContext";
+import { TodoActionContex } from "../../context/TodoActionContext";
+import { TodoContext } from "../../context/TodoContext";
 
 type Props = {
   todo: string;
@@ -10,8 +12,14 @@ type Props = {
 
 const SearchItem = ({ todo }: Props) => {
   const { inputText } = useContext(TodoInputContext);
+  const { createTodoItem } = useContext(TodoContext);
+
+  const onSelectTodo = (text: string) => {
+    createTodoItem(text);
+  };
+
   return (
-    <S.TodoLine>
+    <S.TodoLine onClick={() => onSelectTodo(todo)}>
       <Highlighter
         highlightStyle={{
           color: theme.colors.green500,

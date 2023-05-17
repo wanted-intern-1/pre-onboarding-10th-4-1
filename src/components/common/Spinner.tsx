@@ -18,8 +18,6 @@ const rotate = keyframes`
 const S = {
   SpinnerIcon: styled(SpinnberSvg)``,
   Rotate: styled.div`
-    width: 16px;
-    height: 16px;
     animation: ${rotate} 2s linear infinite;
   `,
 };
